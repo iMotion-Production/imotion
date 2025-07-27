@@ -15,19 +15,19 @@
     $socials = [
         [
             'icon' => 'ri-linkedin-box-fill',
-            'url' => '#',
+            'url' => 'https://linkedin.com',
         ],
         [
             'icon' => 'ri-instagram-line',
-            'url' => '#',
+            'url' => 'https://instagram.com',
         ],
         [
             'icon' => 'ri-youtube-line',
-            'url' => '#',
+            'url' => 'https://youtube.com',
         ],
         [
             'icon' => 'ri-facebook-fill',
-            'url' => '#',
+            'url' => 'https://facebook.com',
         ],
     ];
 
@@ -57,7 +57,7 @@
                     'url' => route('service.printing-design'),
                 ],
                 [
-                    'text' => 'Web Development',
+                    'text' => 'Website Design & Development',
                     'active' => 'service.web-development',
                     'url' => route('service.web-development'),
                 ],
@@ -100,7 +100,7 @@
             <div>English</div>
             <div class="flex items-center gap-2">
                 @foreach ($socials as $social)
-                    <a href="{{ $social['url'] }}" class="text-accent-2 p-1 border border-accent-2/50 hover:bg-foreground/10 rounded-tl-lg rounded-br-lg hover:text-accent-2-hover transition-colors duration-300">
+                    <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" class="text-accent-2 p-1 border border-accent-2/50 hover:bg-foreground/10 rounded-tl-lg rounded-br-lg hover:text-accent-2-hover transition-colors duration-300">
                         <x-icon name="{{ $social['icon'] }}" class="size-5"></x-icon>
                     </a>
                 @endforeach
