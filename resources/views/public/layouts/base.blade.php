@@ -20,9 +20,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     @vite('resources/css/public.css')
+    <script type="text/javascript">function setTheme(e=!1){window.localStorage.setItem("theme",e?"dark":"light");const t=document.documentElement.classList;e?t.add("dark"):t.remove("dark")}"dark"===window.localStorage.getItem("theme")||!("theme"in window.localStorage)&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme(!0):setTheme(!1)</script>
 </head>
 <body class="antialiased overflow-x-hidden font-montserrat">
+@include('public/partials/header')
 @yield('content')
+@include('public/partials/footer')
+@isset($script)
+@vite('resources/js/blade/pages/' . $script . '.js')
+@endisset
+@vite('resources/js/blade/layouts/base.js')
 </script>
 </body>
 </html>
