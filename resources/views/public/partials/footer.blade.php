@@ -104,11 +104,11 @@
                 <div class="md:col-span-2 lg:col-span-4 text-white">
                     @if (!request()->routeIs('home'))
                     <a href="{{ route('home') }}">
-                        <x-logo class="h-14 w-auto text-foreground" />
+                        <x-logo class="h-14 w-auto text-white" />
                     </a>
                     @else
                     <div>
-                        <x-logo class="h-14 w-auto text-foreground" />
+                        <x-logo class="h-14 w-auto text-white" />
                     </div>
                     @endif
                     <p class="mt-2 text-sm font-semibold">Creation Digital Marketing Agency</p>
@@ -144,14 +144,14 @@
                         Subscribe and stay up to date with the latest our tips and news.
                     </p>
                     <form class="mt-4 flex items-center w-full relative">
-                        <input type="email" placeholder="Email" class="w-full rounded-tl-2xl rounded-br-2xl border-border bg-transparent p-4 pr-32 text-sm text-white placeholder:text-white/60 focus:border-accent-1 focus:ring-0">
+                        <input type="email" placeholder="Email" class="w-full rounded-tl-2xl rounded-br-2xl border-white/30 bg-transparent p-4 pr-32 text-sm text-white placeholder:text-white/60 focus:border-accent-1 focus:ring-0">
                         <button type="submit" class="absolute right-2 rounded-tl-xl rounded-br-xl bg-accent-1 px-5 py-2 text-sm font-semibold text-slate-900 hover:bg-accent-1-hover transition-colors">
                             Subscribe
                         </button>
                     </form>
                     <div class="mt-6 flex items-center flex-wrap gap-3">
                         @foreach ($socials as $social)
-                            <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" class="text-foreground p-2 border border-current/20 hover:bg-foreground/10 rounded-tl-md rounded-br-md hover:text-accent-2-hover transition-colors duration-300">
+                            <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" class="text-white p-2 border border-current/20 hover:bg-white/10 rounded-tl-md rounded-br-md hover:border-accent-2-hover transition-colors duration-300">
                                 <x-icon name="{{ $social['icon'] }}" class="size-5"></x-icon>
                             </a>
                         @endforeach

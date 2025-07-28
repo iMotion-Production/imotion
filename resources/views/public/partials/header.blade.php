@@ -109,7 +109,7 @@
     </div>
 </div>
 
-<header class="w-full bg-background border-b border-yellow-400/10 sticky top-0 z-40">
+<header class="w-full bg-background border-b border-border sticky top-0 z-40">
     <div class="container flex items-center justify-between py-3 px-4 md:px-0" x-data="menu()">
         @if (!request()->routeIs('home'))
         <a href="{{ route('home') }}">

@@ -17,6 +17,7 @@
     --color-accent-2-hover: var(--color-accent-2-hover);
     --color-background: var(--color-background);
     --color-foreground: var(--color-foreground);
+    --color-muted: var(--color-muted);
     --color-border: var(--color-border);
 }
 
@@ -27,6 +28,7 @@
     --color-accent-2-hover: #06754a;
     --color-background: #F9FAFB;
     --color-foreground: #1F2937;
+    --color-muted: #6B7280;
     --color-border: #E5E7EB;
 }
 
@@ -37,6 +39,7 @@
     --color-accent-2-hover: #00cc7a;
     --color-background: #030615;
     --color-foreground: #F9FAFB;
+    --color-muted: #9ca3af;
     --color-border: #475569;
 }
 
