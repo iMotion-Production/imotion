@@ -348,7 +348,7 @@
     <section class="container py-10 sm:py-14 lg:py-24">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div class="relative w-full max-w-md aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto lg:order-2">
-                <img src="/assets/home/project.jpg" alt="Project Placeholder" class="w-full h-full object-cover">
+                <img src="/assets/home/project.jpg" alt="Project Kick-Off" class="w-full h-full object-cover">
             </div>
 
             <div class="space-y-6 lg:order-1">
