@@ -73,6 +73,33 @@
             "label" => "Team Member"
         ]
     ];
+
+    $portfolio = [
+        'Advertising Services',
+        'Printing Services',
+        'Web Development',
+        'App Development',
+        'Digital Marketing',
+    ];
+
+    $accordionItems = [
+        [
+            'title' => 'What is social media marketing?',
+            'text' => 'Social media marketing (SMM) (also known as digital marketing and e-marketing) is the use of social media—the platforms on which users build social networks and share information—to build a company\'s brand, increase sales, and drive website traffic. In addition to providing companies with a way to engage with existing customers and reach new ones, social media marketing (SMM) has purpose-built data analytics that allow marketers to track the success of their efforts and identify even more ways to engage.'
+        ],
+        [
+            'title' => 'Do you need to use social media marketing?',
+            'text' => 'Social media marketing (SMM) (also known as digital marketing and e-marketing) is the use of social media—the platforms on which users build social networks and share information—to build a company\'s brand, increase sales, and drive website traffic. In addition to providing companies with a way to engage with existing customers and reach new ones, social media marketing (SMM) has purpose-built data analytics that allow marketers to track the success of their efforts and identify even more ways to engage.'
+        ],
+        [
+            'title' => 'How do I join Printing On Demand Program?',
+            'text' => 'Social media marketing (SMM) (also known as digital marketing and e-marketing) is the use of social media—the platforms on which users build social networks and share information—to build a company\'s brand, increase sales, and drive website traffic. In addition to providing companies with a way to engage with existing customers and reach new ones, social media marketing (SMM) has purpose-built data analytics that allow marketers to track the success of their efforts and identify even more ways to engage.'
+        ],
+        [
+            'title' => 'How much does it cost to develop a custom mobile app?',
+            'text' => 'Social media marketing (SMM) (also known as digital marketing and e-marketing) is the use of social media—the platforms on which users build social networks and share information—to build a company\'s brand, increase sales, and drive website traffic. In addition to providing companies with a way to engage with existing customers and reach new ones, social media marketing (SMM) has purpose-built data analytics that allow marketers to track the success of their efforts and identify even more ways to engage.'
+        ]
+    ];
 @endphp
 
 @section('content')
@@ -163,7 +190,7 @@
         </div>
     </section>
 
-    <section class="container py-16 lg:py-24">
+    <section class="container py-10 sm:py-14 lg:py-24">
         <div class="text-center mx-auto text-foreground max-w-7xl">
             <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
                 What We Do
@@ -195,7 +222,7 @@
     </section>
 
     <section x-data="videoModal()" class="relative">
-        <div class="container py-16 lg:py-24">
+        <div class="container py-10 sm:py-14 lg:py-24">
             <div class="text-left text-foreground max-w-4xl">
                 <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
                     Why Choose Us
@@ -259,7 +286,7 @@
         </div>
     </section>
 
-    <section class="container py-16 lg:py-24">
+    <section class="container py-10 sm:py-14 lg:py-24">
         <div class="text-center mx-auto text-foreground max-w-7xl">
             <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
                 Our Experience
@@ -271,10 +298,123 @@
         <div class="mt-10 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 items-start">
             @foreach ($experiences as $idx => $experience)
                 <div class="bg-foreground/10 border border-border p-8 rounded-lg text-center w-full {{ $idx % 2 == 0 ? 'md:mt-8' : '' }}">
-                    <p class="text-3xl lg:text-4xl font-extrabold text-accent-1">{{ $experience['value'] }}</p>
+                    <p class="text-3xl lg:text-4xl font-extrabold text-accent-2">{{ $experience['value'] }}</p>
                     <div class="mt-2 text-lg sm:text-xl text-foreground font-semibold">{{ $experience['label'] }}</div>
                 </div>
             @endforeach
+        </div>
+    </section>
+
+    <section class="container py-10 sm:py-14 lg:py-24">
+        <div class="text-center mx-auto text-foreground max-w-7xl">
+            <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
+                Our Team Member
+            </span>
+            <h1 class="text-4xl md:text-5xl font-bold mt-3">
+                Meet Our Team
+            </h1>
+            <p class="mt-3 sm:mt-6 space-y-3 sm:space-y-4 text-base sm:text-lg text-muted max-w-3xl mx-auto">
+                We thrive on the rush of taking on new challenges with daring and groundbreaking brands. With a fiery passion for innovation and disruption, we're always eager to push the boundaries and deliver extraordinary results that exceed expectations.
+            </p>
+        </div>
+        <div class="flex items-center justify-center max-w-sm mx-auto mt-8">
+            <div>
+                <div class="overflow-hidden rounded-full size-64 border border-border bg-foreground/50 relative">
+                    <img src="/assets/home/author.png" alt="Author 1">
+                </div>
+                <div class="text-center">
+                    <h3 class="text-xl font-bold text-foreground mt-4">Ahmad Nadzri</h3>
+                    <p class="text-muted text-sm">Founder</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-10 sm:py-14 lg:py-24">
+        <div class="text-center mx-auto text-foreground max-w-7xl">
+            <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
+                Our Work Force
+            </span>
+            <h1 class="text-4xl md:text-5xl font-bold mt-3">
+                Our Strategy
+            </h1>
+            <p class="mt-3 sm:mt-6 space-y-3 sm:space-y-4 text-base sm:text-lg text-muted max-w-3xl mx-auto">
+                Our in-house team have the knowledge and experience to handle complex marketing and growth challenges enabling ambitious companies to improve their marketing and brand online
+            </p>
+        </div>
+        <img src="/assets/home/strategy.png" alt="Our Strategy" class="w-full h-full object-cover">
+    </section>
+
+    <section class="container py-10 sm:py-14 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div class="relative w-full max-w-md aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto lg:order-2">
+                <img src="/assets/home/project.jpg" alt="Project Placeholder" class="w-full h-full object-cover">
+            </div>
+
+            <div class="space-y-6 lg:order-1">
+                <div class="text-left text-foreground max-w-4xl">
+                    <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
+                        Project Kick-Off
+                    </span>
+                    <h1 class="text-4xl md:text-5xl font-bold mt-3">
+                        Start Your Project
+                    </h1>
+                    <p class="mt-3 sm:mt-6 text-base sm:text-lg text-muted max-w-3xl">
+                        This is the space we cherish, where we either ideate or imagine and find our way to anyone with the desire to digitalize their kingdom and thrive. We delve into and find out a way for a user to achieve their quantum growth goals.
+                    </p>
+                    <form class="mt-3 sm:mt-6 flex items-center w-full relative">
+                        <input type="email" placeholder="Enter your email..." class="w-full rounded-l-lg border-foreground/30 bg-transparent p-4 pr-32 text-sm text-foreground placeholder:text-foreground/60 focus:border-accent-1 focus:ring-0">
+                        <button type="submit" class="bg-accent-1 px-5 py-3.5 border border-accent-1 rounded-r-lg font-semibold text-slate-900 hover:bg-accent-1-hover transition-colors">
+                            <x-icon name="ri-send-plane-fill" class="size-6" />
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-10 sm:py-14 lg:py-24">
+        <div class="text-center mx-auto text-foreground max-w-7xl">
+            <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
+                FAQ
+            </span>
+            <h1 class="text-4xl md:text-5xl font-bold mt-3">
+                Frequently Asked Question.
+            </h1>
+            <p class="mt-3 sm:mt-6 space-y-3 sm:space-y-4 text-base sm:text-lg text-muted max-w-3xl mx-auto">
+                Go behind the scenes and discover the processes, strategies and insights that drive our creative, culture, and ultimately, our client's success
+            </p>
+        </div>
+        <div class="mt-12 lg:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto lg:order-2">
+                <img src="/assets/home/faq.jpg" alt="FAQ Placeholder" class="w-full h-full object-cover">
+            </div>
+            <div class="space-y-6 lg:order-1">
+                <div x-data="{ selected: '0' }" class="w-full space-y-4 text-foreground">
+                    @foreach ($accordionItems as $item)
+                        <div class="border border-accent-1/30 rounded-tl-3xl rounded-br-3xl overflow-hidden">
+                            <button id="accordion-control-{{ $loop->index }}"
+                                    type="button"
+                                    class="flex w-full items-center justify-between gap-4 bg-accent-1/5 dark:bg-accent-1/10 p-4 text-left underline-offset-2 hover:bg-accent-1/10 focus-visible:bg-accent-1/10 dark:hover:bg-accent-1/15 dark:focus-visible:bg-accent-1/15 focus-visible:underline focus-visible:outline-hidden transition-colors duration-300 cursor-pointer"
+                                    aria-controls="accordion-{{ $loop->index }}"
+                                    x-on:click="selected = '{{ $loop->index }}'"
+                                    x-bind:class="selected === '{{ $loop->index }}'
+                                            ? 'font-bold'
+                                            : 'font-medium'"
+                                    x-bind:aria-expanded="selected === '{{ $loop->index }}' ? 'true' : 'false'">
+                                <span>{{ $item['title'] }}</span>
+                                <x-icon name="ri-arrow-down-s-line" class="size-5 shrink-0 transition-transform duration-300" aria-hidden="true" x-bind:class="selected === '{{ $loop->index }}'  ?  'rotate-180'  :  ''" />
+                            </button>
+
+                            <div x-cloak x-show="selected === '{{ $loop->index }}'" id="accordion-{{ $loop->index }}" role="region" aria-labelledby="accordion-control-{{ $loop->index }}" x-collapse>
+                                <div class="p-4 text-sm sm:text-base text-muted text-pretty">
+                                    {{ $item['text'] }}
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </section>
 </main>

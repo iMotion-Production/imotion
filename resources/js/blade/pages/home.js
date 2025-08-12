@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import collapse from '@alpinejs/collapse';
 
 Alpine.data('videoModal', function () {
     return {
@@ -16,3 +17,5 @@ Alpine.data('videoModal', function () {
         }
     };
 });
+
+Alpine.plugin(collapse);
