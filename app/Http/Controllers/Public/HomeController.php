@@ -8,8 +8,9 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
+        $title = 'Home';
         $script = 'home';
 
-        return view('public.home', compact('script'));
+        return view('public.home', compact('title', 'script'));
     }
 }

@@ -8,6 +8,9 @@ class PrintingDesignController extends Controller
 {
     public function __invoke()
     {
-        return view('public.printing-design');
+        $title = 'Printing Design';
+        $script = 'printing-design';
+
+        return view('public.printing-design', compact('title', 'script'));
     }
 }

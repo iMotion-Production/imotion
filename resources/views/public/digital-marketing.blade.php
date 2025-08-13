@@ -111,7 +111,7 @@
                 </p>
                 <div class="space-y-2 sm:space-y-4 pt-4">
                     @foreach ($services as $item)
-                        <div class="flex items-start gap-4">
+                        <div class="flex items-center gap-4">
                             <div class="size-8 rounded-full bg-accent-2 text-background flex-shrink-0 flex items-center justify-center">
                                 <x-icon name="ri-check-line" class="size-5" />
                             </div>
