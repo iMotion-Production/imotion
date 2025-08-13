@@ -8,6 +8,8 @@ class WebsiteDevelopmentController extends Controller
 {
     public function __invoke()
     {
-        return view('public.website-development');
+        $title = 'Website Design & Development';
+
+        return view('public.website-development', compact('title'));
     }
 }
