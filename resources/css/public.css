@@ -19,6 +19,11 @@
     --color-foreground: var(--color-foreground);
     --color-muted: var(--color-muted);
     --color-border: var(--color-border);
+
+    --color-basic: #1DFDAC;
+    --color-basic-hover: #00e794;
+    --color-popular: #B5FD1D;
+    --color-popular-hover: #96e400;
 }
 
 :root {

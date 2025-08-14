@@ -8,6 +8,8 @@ class DigitalMarketingController extends Controller
 {
     public function __invoke()
     {
-        return view('public.digital-marketing');
+        $title = 'Digital Marketing';
+
+        return view('public.digital-marketing', compact('title'));
     }
 }

@@ -8,6 +8,8 @@ class GraphicDesignController extends Controller
 {
     public function __invoke()
     {
-        return view('public.graphic-design');
+        $title = 'Graphic Design';
+
+        return view('public.graphic-design', compact('title'));
     }
 }

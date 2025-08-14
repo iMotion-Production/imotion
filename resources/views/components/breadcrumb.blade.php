@@ -12,7 +12,7 @@
                             {{ $breadcrumb['title'] }}
                         </a>
                     </li>
-                    @if ($index < count($breadcrumbs) - 1)
+                    @if ($index < count($breadcrumbs) - 1 && $breadcrumbs[$index + 1]['title'] !== $title)
                         <li aria-hidden="true">
                             <x-icon name="ri-arrow-right-line" class="size-5" />
                         </li>
