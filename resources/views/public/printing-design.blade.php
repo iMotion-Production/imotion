@@ -106,20 +106,20 @@
                     Why Choose Us
                 </span>
                 <h1 class="text-4xl md:text-5xl font-bold mt-3">
-                    We Are Creative People with Big Dream
+                    Our Impressive quality and diverse designs from Us
                 </h1>
                 <p class="mt-3 sm:mt-6 text-base sm:text-lg text-muted max-w-2xl">
-                    We produce awesome visuals. Full of energy, drive, and passion, our team aims to deliver the most outstanding work in every pixel.
+                    With our handy product designer you can quickly print custom merchandise and generate mockups with a click of a button.
                 </p>
             </div>
             <div class="relative z-10 mt-12 lg:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <img class="w-full h-auto max-w-2xl" src="/assets/printing-design/chose-us.png" alt="Printing Design Chose Us">
                 <div>
                     <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
-                        We pour our heart into every design
+                        Discover corporate clothing, merchandise items & more for your business
                     </h2>
                     <p class="mt-3 sm:mt-6 text-base sm:text-lg text-muted max-w-3xl">
-                        Data We do what we do because we love it and are dedicated to creating meaningful work. That’s why clients hire us. Our heart is set on their goals.
+                        Our Business helps corporate customers make their brands stand out. It's a great print method for corporate identity, and also for accessories and corporate gift
                     </p>
                     <div class="space-y-4 pt-4">
                         @foreach ($choseUs as $item)
