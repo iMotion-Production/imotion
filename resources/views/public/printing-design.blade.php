@@ -58,7 +58,7 @@
 @section('content')
 <main class="bg-background overflow-x-hidden">
     <x-breadcrumb title="Printing Design" />
-    <section class="container pb-8 sm:pb-12 lg:pb-20 pt-5 sm:pt-7 lg:pt-12">
+    <section class="container pt-5 sm:pt-7 lg:pt-12">
         <div class="text-center text-foreground max-w-3xl mx-auto">
             <h1 class="text-2xl md:text-3xl font-extrabold">
                 Focus on selling while we handle printing and shipping. Only pay after making a sale!
@@ -69,9 +69,9 @@
         </div>
         <img src="/assets/printing-design/base.png" alt="Printing Design" class="w-full h-full object-cover max-w-5xl mx-auto mt-6">
     </section>
-    <section class="container pb-10 sm:pb-14 lg:pb-24">
+    <section class="container pt-6 sm:pt-10 lg:pt-16">
         <div class="mt-10 lg:mt-14 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
-            <img class="w-full h-auto max-w-2xl" src="/assets/printing-design/expertise.png" alt="Printing Design Expertise">
+            <img class="w-full h-auto max-w-2xl mx-auto" src="/assets/printing-design/expertise.png" alt="Printing Design Expertise">
             <div class="space-y-2 sm:space-y-4 max-w-2xl mx-auto">
                 <x-badge title="Our Expertise" />
                 <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
@@ -97,10 +97,10 @@
         </div>
     </section>
     <section class="relative">
-        <div class="container pb-10 sm:pb-14 lg:pb-24">
+        <div class="container pt-12 sm:pt-16 lg:pt-28">
             <x-title class="max-w-4xl" badge="Why Choose Us" heading="Our Impressive quality and diverse designs from Us" description="With our handy product designer you can quickly print custom merchandise and generate mockups with a click of a button." />
             <div class="relative z-10 mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <img class="w-full h-auto max-w-2xl" src="/assets/printing-design/chose-us.png" alt="Printing Design Chose Us">
+                <img class="w-full h-auto max-w-2xl mx-auto" src="/assets/printing-design/chose-us.png" alt="Printing Design Chose Us">
                 <div class="space-y-2 sm:space-y-4">
                     <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
                         Discover corporate clothing, merchandise items & more for your business
@@ -124,7 +124,7 @@
                 </div>
             </div>
         </div>
-        <img src="/assets/printing-design/bags.png" alt="Decorator bags" aria-hidden="true" class="absolute -top-16 right-16 w-md pointer-events-none z-0 hidden xl:block">
+        <img src="/assets/printing-design/bags.png" alt="Decorator bags" aria-hidden="true" class="absolute top-0 right-16 w-md pointer-events-none z-0 hidden xl:block">
     </section>
     <section class="container py-10 sm:py-14 lg:py-24">
         <x-title class="max-w-4xl" badge="Our Portfolio" heading="Let's See Our Best Work" description="We Impress your organization & customers with customization options, and enjoy easy customer and order management." />
