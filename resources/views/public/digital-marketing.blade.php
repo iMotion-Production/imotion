@@ -83,7 +83,7 @@
 <main class="bg-background overflow-x-hidden">
     <x-breadcrumb title="Digital Marketing" />
 
-    <section class="container pb-10 sm:pb-14 lg:pb-24 pt-5 sm:pt-7 lg:pt-12">
+    <section class="container pt-5 sm:pt-7 lg:pt-12">
         <div class="text-center text-foreground max-w-2xl mx-auto">
             <h1 class="text-2xl md:text-3xl font-extrabold">
                 The Content We Throw Away Is Better Than What Most People Publish
@@ -93,7 +93,7 @@
             </p>
         </div>
 
-        <div class="mt-12 lg:mt-16 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
+        <div class="mt-10 lg:mt-14 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
             <div class="relative w-full max-w-xl mx-auto">
                 <img src="/assets/digital-marketing/toolbar.png" alt="Toolbar Digital Marketing" class="h-auto w-10 xs:w-14 absolute -top-6 xs:-top-10 md:-top-14 left-0">
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 ml-10 xs:ml-14 lg:ml-16">
@@ -126,7 +126,7 @@
         </div>
     </section>
 
-    <section class="container pb-10 sm:pb-14 lg:pb-24">
+    <section class="container pt-12 sm:pt-16 lg:pt-28">
         <x-title class="max-w-5xl" isCenter badge="Our Expertise" heading="We run Your brand campaign and let you focus on what's important" />
         <img src="/assets/digital-marketing/tiktok.png" alt="Our Expertise Tiktok" class="w-full h-full object-cover max-w-7xl mx-auto mt-6 sm:mt-14">
         <div class="mt-8 sm:mt-14 lg:mt-20 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center max-w-5xl mx-auto">
@@ -145,7 +145,7 @@
         <img src="/assets/digital-marketing/process.png" alt="Our Expertise Process" class="w-full h-full object-cover max-w-7xl mx-auto mt-6 sm:mt-14">
     </section>
 
-    <section class="container pb-10 sm:pb-14 lg:pb-24">
+    <section class="container pt-12 sm:pt-16 lg:pt-28">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 xs:gap-12 lg:gap-16 text-foreground">
             <div class="lg:col-span-1">
                 <h2 class="text-3xl sm:text-4xl font-bold">Skillset</h2>
@@ -167,7 +167,7 @@
         </div>
     </section>
 
-    <section class="container pb-10 sm:pb-14 lg:pb-24">
+    <section class="container py-10 sm:py-14 lg:py-24">
         <x-title class="max-w-5xl" isCenter badge="Our Pricing Plan" heading="Pricing We're Offering" description="It is important to understand that the social media marketing pricing below is based on an estimate versus our current pricing. So, do take it as a guide." />
         <div class="grid gap-5 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 mt-8 sm:mt-14 lg:mt-20">
             @foreach ($pricingPlans as $plan)

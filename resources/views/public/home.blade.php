@@ -236,7 +236,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="space-y-2 sm:space-y-4">
                     <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
                         Proactively - with a transparent process to uphold both your deadlines & your budget
