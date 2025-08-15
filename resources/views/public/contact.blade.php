@@ -23,7 +23,6 @@
 @section('content')
 <main class="bg-background overflow-x-hidden">
     <x-breadcrumb title="Contact" />
-
     <section class="container pt-5 sm:pt-7 lg:pt-12">
          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl items-center justify-center mx-auto">
             @foreach ($contacts as $contact)
@@ -41,7 +40,6 @@
             @endforeach
         </div>
     </section>
-
     <section class="container py-10 sm:py-14 lg:py-24">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mx-auto max-w-7xl">
             <div class="relative w-full max-w-xl aspect-square rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto">
@@ -71,7 +69,6 @@
             </form>
         </div>
     </section>
-
     <section x-data="{ isShow: false }" x-intersect.once="isShow = true" class="bg-foreground/5 rounded-lg shadow-xl min-h-[30rem] flex items-center justify-center">
         <template x-if="!isShow">
             <div class="text-muted font-bold">Loading...</div>

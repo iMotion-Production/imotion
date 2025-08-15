@@ -36,7 +36,6 @@
 @section('content')
 <main class="bg-background overflow-x-hidden">
     <x-breadcrumb title="About Us" />
-
     <section class="container pt-5 sm:pt-7 lg:pt-12">
         <div class="flex flex-col lg:flex-row gap-16 items-center justify-evenly">
             <img class="w-full h-auto max-w-xl" src="/assets/home/about.png" alt="Illustration of Designed to Drive Results">
@@ -66,7 +65,6 @@
             </div>
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <x-title isCenter badge="FAQ" heading="Frequently Asked Question." description="Go behind the scenes and discover the processes, strategies and insights that drive our creative, culture, and ultimately, our client's success" />
         <div class="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -97,7 +95,6 @@
             </div>
         </div>
     </section>
-
     <section class="container py-10 sm:py-14 lg:py-24">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto">

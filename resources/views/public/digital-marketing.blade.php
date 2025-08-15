@@ -1,7 +1,7 @@
 @extends('public/layouts/base')
 
 @php
-    $services = [
+    $items = [
         [
             'title' => 'Frequent Content Consulting',
             'description' => 'We\'ll guide as you implement our strategy, walking you through every step.',
@@ -110,7 +110,7 @@
                     Pick from a variety of content marketing options that work for your budget and speed. We'll handle all your content marketing and report the performance directly to you.
                 </p>
                 <ul class="space-y-2 sm:space-y-4">
-                    @foreach ($services as $item)
+                    @foreach ($items as $item)
                         <li class="flex items-center gap-4">
                             <div class="size-8 rounded-full bg-accent-2 text-background flex-shrink-0 flex items-center justify-center">
                                 <x-icon name="ri-check-line" class="size-5" />

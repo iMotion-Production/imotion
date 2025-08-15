@@ -42,7 +42,6 @@
                 We power business with flexible technology that's structured to scale as brands grow.
             </p>
         </div>
-
         <div class="mt-10 lg:mt-14 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
             <img class="w-full h-auto max-w-2xl" src="/assets/mobile-application/base.png" alt="Mobile Application">
             <div class="space-y-2 sm:space-y-4 max-w-2xl mx-auto">

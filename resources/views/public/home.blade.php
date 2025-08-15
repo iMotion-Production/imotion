@@ -161,7 +161,6 @@
             <img class="w-full h-auto max-w-lg" src="/assets/home/hero.png" alt="Illustration of FutureProof Digital Marketing Agency">
         </div>
     </section>
-
     <section class="container">
         <h2 class="text-2xl sm:text-3xl text-center font-bold text-foreground">They trust Us</h2>
         <div class="mt-8 sm:mt-12 flex items-center justify-center gap-6 sm:gap-10 flex-wrap">
@@ -170,7 +169,6 @@
             @endfor
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <div class="flex flex-col lg:flex-row gap-16 items-center justify-evenly">
             <img class="w-full h-auto max-w-xl" src="/assets/home/about.png" alt="Illustration of Designed to Drive Results">
@@ -200,7 +198,6 @@
             </div>
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <x-title isCenter badge="What We Do" heading="Our Creative & Digital Marketing Services" description="We are a powerhouse of dedicated experts and creators in all modern fields of Digital Marketing. We empower your business using the most effective tools in combination with proven strategies, creative magic and data-driven assets, we love the leeway to take your business to the next level and beyond." />
          <div class="mt-10 lg:mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -223,7 +220,6 @@
             @endforeach
         </div>
     </section>
-
     <section x-data="videoModal()" class="relative pt-12 sm:pt-16 lg:pt-28">
         <div class="container">
             <x-title class="max-w-4xl" badge="Why Choose Us" heading="Our Digital Agency Delivers Extraordinary Business Value" description="Our continuous automation of receptive processes and use of intelligent tools in product development enable us to deliver within a short timeframe and increase the time to value ratio." />
@@ -259,9 +255,7 @@
                 </div>
             </div>
         </div>
-
         <img src="/assets/home/decorator-mobile.png" alt="Decorator mobile" aria-hidden="true" class="absolute -top-10 -right-5 w-[520px] pointer-events-none z-0 hidden xl:block">
-
         <div x-cloak x-show="popupOpen" @keydown.escape.window="closeModal()" class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4" aria-modal="true">
             <div x-show="popupOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90" @click.away="closeModal()" class="relative w-full max-w-4xl bg-background rounded-xl shadow-2xl p-3 sm:p-5">
                 <div class="aspect-video">
@@ -276,7 +270,6 @@
             </div>
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <x-title class="max-w-5xl" isCenter badge="Our Experience" heading="A Proven 10-Year History Of Success In Creative Digital Marketing Technology" />
         <div class="mt-10 lg:mt-14 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 items-start">
@@ -288,7 +281,6 @@
             @endforeach
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <div class="max-w-7xl mx-auto">
             <x-title badge="Our Portfolio" heading="Let's See Our Best Work" description="We produce sustainable creative for brands looking to produce high-quality content, showcase their product and communicate messages quickly, without all the fuss of traditional shoot production!" />
@@ -302,7 +294,6 @@
             </div>
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <x-title isCenter badge="Our Team Member" heading="Meet Our Team" description="We thrive on the rush of taking on new challenges with daring and groundbreaking brands. With a fiery passion for innovation and disruption, we’re always eager to push the boundaries and deliver extraordinary results that exceed expectations." />
         <div class="flex flex-col items-center max-w-sm mx-auto mt-8">
@@ -315,12 +306,10 @@
             </div>
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <x-title isCenter badge="Our Work Force" heading="Our Strategy" description="Our in-house team have the knowledge and experience to handle complex marketing and growth challenges enabling ambitious companies to improve their marketing and brand online." />
         <img src="/assets/home/strategy.png" alt="Our Strategy" class="w-full h-full object-cover max-w-6xl mx-auto">
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto lg:order-2">
@@ -337,7 +326,6 @@
             </div>
         </div>
     </section>
-
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <x-title isCenter badge="FAQ" heading="Frequently Asked Question." description="Go behind the scenes and discover the processes, strategies and insights that drive our creative, culture, and ultimately, our client's success" />
         <div class="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -368,7 +356,6 @@
             </div>
         </div>
     </section>
-
     <section class="container py-10 sm:py-14 lg:py-24">
         <x-title isCenter badge="Community News" heading="Latest News" description="Subscribe and stay up to date with the latest our tips and news." />
          <div class="mt-10 lg:mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
