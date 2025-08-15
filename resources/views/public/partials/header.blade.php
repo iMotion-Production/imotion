@@ -81,7 +81,7 @@
         [
             'text' => 'Contact',
             'active' => 'contact',
-            'url' => '#',
+            'url' => route('contact'),
         ],
     ];
 @endphp

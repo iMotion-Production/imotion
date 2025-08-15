@@ -327,7 +327,7 @@
             <div class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto lg:order-2">
                 <img src="/assets/home/project.jpg" alt="Project Kick-Off" class="w-full h-full object-cover">
             </div>
-            <div class="space-y-6 lg:order-1">
+            <div class="lg:order-1">
                 <x-title class="max-w-4xl" badge="Project Kick-Off" heading="Start Your Project" description="This is the space we cherish, where we either ideate or imagine and find our way to anyone with the desire to digitalize their kingdom and thrive. We delve into and find out a way for a user to achieve their quantum growth goals." />
                 <form class="mt-3 sm:mt-6 flex items-center w-full relative max-w-xl">
                     <input type="email" placeholder="Enter your email..." class="w-full rounded-l-lg border-foreground/30 bg-transparent p-4 pr-32 text-sm text-foreground placeholder:text-foreground/60 focus:border-accent-1 focus:ring-0">

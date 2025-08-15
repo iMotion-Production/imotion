@@ -4,6 +4,7 @@
     "": {
       "dependencies": {
         "@alpinejs/collapse": "^3.14.9",
+        "@alpinejs/intersect": "^3.14.9",
         "alpinejs": "^3.14.9",
       },
       "devDependencies": {
@@ -19,6 +20,8 @@
   },
   "packages": {
     "@alpinejs/collapse": ["@alpinejs/collapse@3.14.9", "", {}, "sha512-cUjbBVo4KR/CfFg0cLB+Q7a8SnjmD4MdxmtZvFjh25Dlf/ZWYPSPx/28b+aAykuX/SUoDPQRmdFiVVvq+iILHw=="],
+
+    "@alpinejs/intersect": ["@alpinejs/intersect@3.14.9", "", {}, "sha512-6LLIqrESA5kxuTbDJshtItfHmZoiiDOpf8lOeRrNtYjSj/FkggDpnjD+ZFGF5btEOVSpWic2VmG2BejR/aMxDw=="],
 
     "@ampproject/remapping": ["@ampproject/remapping@2.3.0", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw=="],
 

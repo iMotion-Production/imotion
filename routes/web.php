@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Public\AboutController;
+use App\Http\Controllers\Public\ContactController;
 use App\Http\Controllers\Public\DigitalMarketingController;
 use App\Http\Controllers\Public\GraphicDesignController;
 use App\Http\Controllers\Public\HomeController;
@@ -16,3 +17,4 @@ Route::get('/web-development', WebsiteDevelopmentController::class)->name('servi
 Route::get('/mobile-application', MobileApplicationController::class)->name('service.mobile-application');
 Route::get('/graphic-design', GraphicDesignController::class)->name('service.graphic-design');
 Route::get('/about', AboutController::class)->name('about');
+Route::get('/contact', ContactController::class)->name('contact');

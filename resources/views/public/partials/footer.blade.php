@@ -22,7 +22,7 @@
         ],
         [
             'text' => 'Contact',
-            'url' => '#',
+            'url' => route('contact'),
         ],
         [
             'text' => 'Digital Marketing',
