@@ -10,7 +10,7 @@
         ],
         [
             'text' => 'About',
-            'url' => '#',
+            'url' => route('about'),
         ],
         [
             'text' => 'Shop',

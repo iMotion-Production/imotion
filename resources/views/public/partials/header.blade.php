@@ -40,7 +40,7 @@
         [
             'text' => 'About',
             'active' => 'about',
-            'url' => '#',
+            'url' => route('about'),
         ],
         [
             'text' => 'Services',
