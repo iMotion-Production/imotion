@@ -8,6 +8,7 @@
 
 @theme inline {
     --breakpoint-xs: 28rem;
+    --leading-small: 1.15;
 
     --font-montserrat: "Montserrat", sans-serif;
 
