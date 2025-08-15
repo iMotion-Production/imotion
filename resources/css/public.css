@@ -72,3 +72,28 @@
 [x-cloak] {
     display: none !important;
 }
+
+.loader {
+    @apply fixed inset-0 z-99 bg-background/80 backdrop-blur-lg flex items-center justify-center flex-col gap-4;
+}
+
+.loader .item {
+    @apply w-12 h-12 inline-block relative bg-accent-1 box-border rounded-md;
+    animation: flipX 1s linear infinite;
+}
+
+.loader span {
+    @apply text-base font-bold text-muted;
+}
+
+@keyframes flipX {
+    0% {
+        transform: perspective(200px) rotateX(0deg) rotateY(0deg);
+    }
+    50% {
+        transform: perspective(200px) rotateX(-180deg) rotateY(0deg);
+    }
+    100% {
+        transform: perspective(200px) rotateX(-180deg) rotateY(-180deg);
+    }
+}

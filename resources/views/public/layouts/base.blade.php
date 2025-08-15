@@ -22,7 +22,11 @@
     @vite('resources/css/public.css')
     <script type="text/javascript">function setTheme(e=!1){window.localStorage.setItem("theme",e?"dark":"light");const t=document.documentElement.classList;e?t.add("dark"):t.remove("dark")}"dark"===window.localStorage.getItem("theme")||!("theme"in window.localStorage)&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme(!0):setTheme(!1)</script>
 </head>
-<body class="antialiased overflow-x-hidden font-montserrat">
+<body class="antialiased overflow-x-hidden font-montserrat overflow-y-hidden">
+<div x-data="loader()" x-show="isLoading" class="loader" x-transition:leave="transition ease-in-out duration-500" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+    <div class="item"></div>
+    <span>Loading...</span>
+</div>
 @include('public/partials/header')
 @yield('content')
 @include('public/partials/footer')

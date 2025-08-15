@@ -161,7 +161,7 @@
         </div>
     </section>
     <section class="container pb-10 sm:pb-14 lg:pb-24">
-        <div class="text-left text-foreground max-w-5xl mx-auto">
+        <div class="text-left text-foreground max-w-6xl mx-auto">
             <span class="inline-block bg-accent-1 text-sm font-semibold text-background py-1 px-3 rounded-tl-lg rounded-br-lg">
                 Our Portfolio
             </span>
@@ -177,7 +177,7 @@
                 <img
                     src="/assets/graphic-design/portfolio/{{ $i }}.jpg"
                     alt="Portfolio {{ $i }}"
-                    class="w-full h-auto mx-auto max-w-5xl rounded-xl shadow-lg"
+                    class="w-full h-auto mx-auto max-w-6xl rounded-xl shadow-lg"
                 />
             @endfor
         </div>
