@@ -21,12 +21,12 @@
 @endphp
 
 @section('content')
-<main class="bg-background overflow-x-hidden">
+<main class="bg-background overflow-hidden">
     <x-breadcrumb title="Contact" />
     <section class="container pt-5 sm:pt-7 lg:pt-12">
          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl items-center justify-center mx-auto">
-            @foreach ($contacts as $contact)
-                <div class="flex flex-col items-center max-w-xs h-full mx-auto w-full bg-background border border-border rounded-2xl p-8 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            @foreach ($contacts as $idx => $contact)
+                <div data-aos="fade-up" data-aos-delay="{{ ($idx + 2) * 150 }}" class="flex flex-col items-center max-w-xs h-full mx-auto w-full bg-background border border-border rounded-2xl p-8 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <div class="w-16 h-16 rounded-full bg-accent-2/10 dark:bg-accent-2/20 text-accent-2 mx-auto flex items-center justify-center">
                         <x-icon name="{{ $contact['icon'] }}" class="size-8" />
                     </div>
@@ -42,10 +42,10 @@
     </section>
     <section class="container py-10 sm:py-14 lg:py-24">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mx-auto max-w-7xl">
-            <div class="relative w-full max-w-xl aspect-square rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto">
+            <div data-aos="fade-right" class="relative w-full max-w-xl aspect-square rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto">
                 <img src="/assets/contact/form.jpg" alt="Contact" class="w-full h-full object-cover">
             </div>
-            <form class="lg:order-1 w-full max-w-xl mx-auto space-y-4">
+            <form data-aos="fade-left" class="lg:order-1 w-full max-w-xl mx-auto space-y-4">
                 <div class="space-y-2">
                     <label for="name" class="block text-sm font-medium text-muted">Name</label>
                     <input required type="text" id="name" name="name" class="w-full bg-white dark:bg-slate-900 border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent-1" required>

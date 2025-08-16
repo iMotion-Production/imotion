@@ -34,6 +34,5 @@
 @vite('resources/js/blade/pages/' . $script . '.js')
 @endisset
 @vite('resources/js/blade/layouts/base.js')
-</script>
 </body>
 </html>

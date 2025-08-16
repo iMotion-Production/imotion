@@ -1,10 +1,10 @@
 <section class="py-10 sm:py-12 lg:py-14 bg-background">
     <div class="container text-center">
-        <h1 class="text-3xl lg:text-4xl font-bold text-foreground">
+        <h1 data-aos="fade-down" class="text-3xl lg:text-4xl font-bold text-foreground">
             {{ $title }}
         </h1>
         <nav aria-label="Breadcrumb" class="mt-3 lg:mt-6">
-            <ol class="flex items-center justify-center flex-wrap gap-x-3 gap-y-2 text-sm md:text-base text-foreground/80">
+            <ol data-aos="fade-right" class="flex items-center justify-center flex-wrap gap-x-3 gap-y-2 text-sm md:text-base text-foreground/80">
                 @foreach ($breadcrumbs as $index => $breadcrumb)
                     @continue($breadcrumb['title'] === $title)
                     <li>

@@ -34,12 +34,12 @@
 @endphp
 
 @section('content')
-<main class="bg-background overflow-x-hidden">
+<main class="bg-background overflow-hidden">
     <x-breadcrumb title="About Us" />
     <section class="container pt-5 sm:pt-7 lg:pt-12">
         <div class="flex flex-col lg:flex-row gap-16 items-center justify-evenly">
-            <img class="w-full h-auto max-w-xl" src="/assets/home/about.png" alt="Illustration of Designed to Drive Results">
-            <div class="text-left text-foreground max-w-2xl">
+            <img data-aos="fade-right" class="w-full h-auto max-w-xl" src="/assets/home/about.png" alt="Illustration of Designed to Drive Results">
+            <div data-aos="fade-left" class="text-left text-foreground max-w-2xl">
                 <x-title badge="About Us" heading="Designed to Drive Results" />
                 <div class="mt-2 sm:mt-4 space-y-3 sm:space-y-4 text-muted">
                     @foreach ($aboutUs['paragraph'] as $paragraph)
@@ -66,12 +66,12 @@
         </div>
     </section>
     <section class="container pt-12 sm:pt-16 lg:pt-28">
-        <x-title isCenter badge="FAQ" heading="Frequently Asked Question." description="Go behind the scenes and discover the processes, strategies and insights that drive our creative, culture, and ultimately, our client's success" />
+        <x-title data-aos="fade-up" isCenter badge="FAQ" heading="Frequently Asked Question." description="Go behind the scenes and discover the processes, strategies and insights that drive our creative, culture, and ultimately, our client's success" />
         <div class="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto lg:order-2">
+            <div data-aos="fade-left" class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto lg:order-2">
                 <img src="/assets/home/faq.jpg" alt="FAQ Placeholder" class="w-full h-full object-cover">
             </div>
-            <div x-data="{ selected: '0' }" class="lg:order-1 w-full space-y-4 text-foreground">
+            <div data-aos="fade-right" x-data="{ selected: '0' }" class="lg:order-1 w-full space-y-4 text-foreground">
                 @foreach ($accordionItems as $item)
                     <div class="border border-accent-1/30 rounded-tl-3xl rounded-br-3xl overflow-hidden">
                         <button id="accordion-control-{{ $loop->index }}"
@@ -97,10 +97,10 @@
     </section>
     <section class="container py-10 sm:py-14 lg:py-24">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto">
+            <div data-aos="fade-right" class="relative w-full max-w-xl aspect-[4/3] rounded-tl-4xl rounded-br-4xl overflow-hidden mx-auto">
                 <img src="/assets/home/project.jpg" alt="Project Kick-Off" class="w-full h-full object-cover">
             </div>
-            <div class="space-y-6">
+            <div data-aos="fade-left" class="space-y-6">
                 <x-title class="max-w-4xl" badge="Project Kick-Off" heading="Start Your Project" description="This is the space we cherish, where we either ideate or imagine and find our way to anyone with the desire to digitalize their kingdom and thrive. We delve into and find out a way for a user to achieve their quantum growth goals." />
                 <form class="mt-3 sm:mt-6 flex items-center w-full relative max-w-xl">
                     <input type="email" placeholder="Enter your email..." class="w-full rounded-l-lg border-foreground/30 bg-transparent p-4 pr-32 text-sm text-foreground placeholder:text-foreground/60 focus:border-accent-1 focus:ring-0">

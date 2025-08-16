@@ -39,9 +39,9 @@
 @endphp
 
 @section('content')
-<main class="bg-background overflow-x-hidden">
+<main class="bg-background overflow-hidden">
     <x-breadcrumb title="Website Design & Development" />
-    <section class="container pt-5 sm:pt-7 lg:pt-12">
+    <section data-aos="fade-up" class="container pt-5 sm:pt-7 lg:pt-12">
         <div class="text-center text-foreground max-w-5xl mx-auto">
             <h1 class="text-2xl md:text-3xl font-extrabold">
                 We provide you with a dedicated, full scale development team that is specific to your business goals and technical needs.
@@ -54,23 +54,23 @@
     </section>
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <div class="flex flex-col 2xl:flex-row gap-12">
-            <div class="text-left text-foreground max-w-2xl">
+            <div data-aos="fade-right" class="text-left text-foreground max-w-2xl">
                 <x-title badge="Our Workflow" heading="Our UX/UI Design Process" />
                 <div class="mt-2 sm:mt-4 space-y-3 sm:space-y-4 text-muted">
                     <p>Our goal is to discover the roadblocks affecting the overall user experience of your digital product. We strive to create an interface that aligns with your creative vision and answers your user's needs.</p>
                     <p>We follow a UX process that relies heavily on research, analytics, and user testing to build a fully functional final product. Here's a breakdown of the steps we take in the design process.</p>
                 </div>
             </div>
-            <img src="/assets/website-development/our-process.png" alt="Our Process Website Design & Development" class="w-full h-full object-cover max-w-5xl mx-auto mt-6 block dark:hidden">
-            <img src="/assets/website-development/our-process-dark.png" alt="Our Process Website Design & Development" class="w-full h-full object-cover max-w-5xl mx-auto mt-6 hidden dark:block">
+            <img data-aos="fade-left" src="/assets/website-development/our-process.png" alt="Our Process Website Design & Development" class="w-full h-full object-cover max-w-5xl mx-auto mt-6 block dark:hidden">
+            <img data-aos="fade-left" src="/assets/website-development/our-process-dark.png" alt="Our Process Website Design & Development" class="w-full h-full object-cover max-w-5xl mx-auto mt-6 hidden dark:block">
         </div>
     </section>
     <section class="relative">
         <div class="container pt-12 sm:pt-16 lg:pt-28">
-            <x-title class="max-w-4xl" badge="Why Choose Us" heading="We Are Creative People with Big Dream" description="We produce awesome visuals. Full of energy, drive, and passion, our team aims to deliver the most outstanding work in every pixel." />
+            <x-title data-aos="fade-right" class="max-w-4xl" badge="Why Choose Us" heading="We Are Creative People with Big Dream" description="We produce awesome visuals. Full of energy, drive, and passion, our team aims to deliver the most outstanding work in every pixel." />
             <div class="relative z-10 mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <img class="w-full h-auto max-w-2xl" src="/assets/website-development/code.png" alt="Why Chose Us Website Development">
-                <div class="space-y-2 sm:space-y-4">
+                <img data-aos="fade-right" class="w-full h-auto max-w-2xl" src="/assets/website-development/code.png" alt="Why Chose Us Website Development">
+                <div data-aos="fade-left" class="space-y-2 sm:space-y-4">
                     <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
                         We pour our heart into every design
                     </h2>
@@ -93,17 +93,17 @@
                 </div>
             </div>
         </div>
-        <img src="/assets/website-development/why-chose-us.png" alt="Decorator bags" aria-hidden="true" class="absolute top-0 right-16 w-md pointer-events-none z-0 hidden xl:block">
+        <img data-aos="fade-left" src="/assets/website-development/why-chose-us.png" alt="Decorator bags" aria-hidden="true" class="absolute top-0 right-16 w-md pointer-events-none z-0 hidden xl:block">
     </section>
     <section class="container py-10 sm:py-14 lg:py-24">
-        <x-title class="max-w-5xl" isCenter badge="Our Portfolio" heading="We changing the way brands connect with audiences in a digital world" description="Our team can create amazing web experiences, beginning with deep market research, practical strategies, and professional execution." />
+        <x-title data-aos="fade-up" class="max-w-5xl" isCenter badge="Our Portfolio" heading="We changing the way brands connect with audiences in a digital world" description="Our team can create amazing web experiences, beginning with deep market research, practical strategies, and professional execution." />
         <div class="mt-10 lg:mt-14 flex flex-col gap-5 lg:gap-10">
             @foreach ($projects as $idx => $project)
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <div class="relative w-full max-w-xl mx-auto{{ $idx % 2 === 1 ? ' lg:order-2' : '' }}">
+                <div data-aos="fade-left" class="relative w-full max-w-xl mx-auto{{ $idx % 2 === 1 ? ' lg:order-2' : '' }}">
                     <img src="/assets/website-development/{{ $project['image'] }}" alt="{{ $project['title'] }} Preview" class="w-full h-full object-cover rounded-2xl">
                 </div>
-                <div class="lg:order-1">
+                <div data-aos="fade-right" class="lg:order-1">
                     <div class="text-base font-bold tracking-[.4rem] sm:tracking-[.8rem] text-accent-2">{{ $project['category'] }}</div>
                     <h2 class="mt-1 sm:mt-1 text-4xl sm:text-5xl font-extrabold text-foreground">
                         {{ $project['title'] }}

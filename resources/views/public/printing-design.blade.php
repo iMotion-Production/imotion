@@ -56,9 +56,9 @@
 @endphp
 
 @section('content')
-<main class="bg-background overflow-x-hidden">
+<main class="bg-background overflow-hidden">
     <x-breadcrumb title="Printing Design" />
-    <section class="container pt-5 sm:pt-7 lg:pt-12">
+    <section data-aos="fade-up" class="container pt-5 sm:pt-7 lg:pt-12">
         <div class="text-center text-foreground max-w-3xl mx-auto">
             <h1 class="text-2xl md:text-3xl font-extrabold">
                 Focus on selling while we handle printing and shipping. Only pay after making a sale!
@@ -71,8 +71,8 @@
     </section>
     <section class="container pt-6 sm:pt-10 lg:pt-16">
         <div class="mt-10 lg:mt-14 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
-            <img class="w-full h-auto max-w-2xl mx-auto" src="/assets/printing-design/expertise.png" alt="Printing Design Expertise">
-            <div class="space-y-2 sm:space-y-4 max-w-2xl mx-auto">
+            <img data-aos="fade-right" class="w-full h-auto max-w-2xl mx-auto" src="/assets/printing-design/expertise.png" alt="Printing Design Expertise">
+            <div data-aos="fade-left" class="space-y-2 sm:space-y-4 max-w-2xl mx-auto">
                 <x-badge title="Our Expertise" />
                 <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
                     We give you a personal professional graphic designer to help you with all of your creative needs.
@@ -98,10 +98,10 @@
     </section>
     <section class="relative">
         <div class="container pt-12 sm:pt-16 lg:pt-28">
-            <x-title class="max-w-4xl" badge="Why Choose Us" heading="Our Impressive quality and diverse designs from Us" description="With our handy product designer you can quickly print custom merchandise and generate mockups with a click of a button." />
+            <x-title data-aos="fade-right" class="max-w-4xl" badge="Why Choose Us" heading="Our Impressive quality and diverse designs from Us" description="With our handy product designer you can quickly print custom merchandise and generate mockups with a click of a button." />
             <div class="relative z-10 mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <img class="w-full h-auto max-w-2xl mx-auto" src="/assets/printing-design/chose-us.png" alt="Printing Design Chose Us">
-                <div class="space-y-2 sm:space-y-4">
+                <img data-aos="fade-right" class="w-full h-auto max-w-2xl mx-auto" src="/assets/printing-design/chose-us.png" alt="Printing Design Chose Us">
+                <div data-aos="fade-left" class="space-y-2 sm:space-y-4">
                     <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
                         Discover corporate clothing, merchandise items & more for your business
                     </h2>
@@ -124,17 +124,18 @@
                 </div>
             </div>
         </div>
-        <img src="/assets/printing-design/bags.png" alt="Decorator bags" aria-hidden="true" class="absolute top-0 right-16 w-md pointer-events-none z-0 hidden xl:block">
+        <img data-aos="fade-left" src="/assets/printing-design/bags.png" alt="Decorator bags" aria-hidden="true" class="absolute top-0 right-16 w-md pointer-events-none z-0 hidden xl:block">
     </section>
     <section class="container py-10 sm:py-14 lg:py-24">
-        <x-title class="max-w-4xl" badge="Our Portfolio" heading="Let's See Our Best Work" description="We Impress your organization & customers with customization options, and enjoy easy customer and order management." />
+        <x-title data-aos="fade-left" class="max-w-4xl" badge="Our Portfolio" heading="Let's See Our Best Work" description="We Impress your organization & customers with customization options, and enjoy easy customer and order management." />
         <div class="mt-10 lg:mt-14">
             @foreach ($portfolio as $item)
                 <div class="mt-10 lg:mt-14 text-center">
-                    <x-badge :title="$item['title']" />
+                    <x-badge data-aos="fade-up" :title="$item['title']" />
                     <div class="grid-masonry mt-6 lg:mt-8">
                     @for ($i = 1; $i <= $item['total']; $i++)
                         <img
+                            data-aos="fade-up" data-aos-delay="{{ ($i + 1) * 150 }}"
                             src="/assets/printing-design/{{ $item['folder'] }}/{{ $i }}.png"
                             alt="{{ $item['title'] }} {{ $i }}"
                             class="grid-masonry-item mb-5 w-auto h-auto"

@@ -31,10 +31,10 @@
 @endphp
 
 @section('content')
-<main class="bg-background overflow-x-hidden">
+<main class="bg-background overflow-hidden">
     <x-breadcrumb title="Mobile Application" />
     <section class="container pt-5 sm:pt-7 lg:pt-12">
-        <div class="text-center text-foreground max-w-2xl mx-auto">
+        <div data-aos="fade-right" class="text-center text-foreground max-w-2xl mx-auto">
             <h1 class="text-2xl md:text-3xl font-extrabold">
                 Our elegant, durable solutions solve business challenges across all touchpoints, screens, and devices.
             </h1>
@@ -42,7 +42,7 @@
                 We power business with flexible technology that's structured to scale as brands grow.
             </p>
         </div>
-        <div class="mt-10 lg:mt-14 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
+        <div data-aos="fade-left" class="mt-10 lg:mt-14 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
             <img class="w-full h-auto max-w-2xl" src="/assets/mobile-application/base.png" alt="Mobile Application">
             <div class="space-y-2 sm:space-y-4 max-w-2xl mx-auto">
                 <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
@@ -68,8 +68,8 @@
         </div>
     </section>
     <section class="container pt-12 sm:pt-16 lg:pt-28">
-        <x-title class="max-w-6xl" isCenter badge="Our Expertise" heading="We implements the highest standards to ensure your platforms run efficiently, effectively process, and securely communicate with outside networks." />
-        <div class="w-full h-full relative max-w-7xl mx-auto mt-6 sm:mt-12">
+        <x-title data-aos="fade-up" class="max-w-6xl" isCenter badge="Our Expertise" heading="We implements the highest standards to ensure your platforms run efficiently, effectively process, and securely communicate with outside networks." />
+        <div data-aos="fade-up" class="w-full h-full relative max-w-7xl mx-auto mt-6 sm:mt-12">
             <img src="/assets/mobile-application/design.png" alt="Our Expertise Mobile Application" class="w-full h-full object-cover pr-6 sm:pr-10">
             <img src="/assets/mobile-application/design-menu.png" alt="Menu Mobile Application" class="absolute w-full h-auto max-w-32 sm:max-w-40 bottom-3 sm:bottom-5 right-0">
         </div>
@@ -77,16 +77,16 @@
     <section class="container py-10 sm:py-14 lg:py-24">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center justify-center">
             <div class="text-left text-foreground max-w-4xl">
-                <x-title class="max-w-4xl" badge="Why Choose Us" heading="Born to Develop" description="We develop a different types of content that can help showcase the app's features, benefits, and value proposition." />
-                <div class="mt-3 sm:mt-6">
+                <x-title data-aos="fade-up" class="max-w-4xl" badge="Why Choose Us" heading="Born to Develop" description="We develop a different types of content that can help showcase the app's features, benefits, and value proposition." />
+                <div data-aos="fade-up" class="mt-3 sm:mt-6">
                     <a href="{{ route('contact') }}" class="inline-flex items-center justify-center gap-2 py-3 px-6 border border-accent-2 font-semibold text-foreground bg-transparent-1 hover:bg-accent-2 hover:text-background rounded-tl-xl rounded-br-xl transition-colors duration-300">
                         <span>Contact Us</span>
                         <x-icon name="ri-messenger-line" class="size-5" />
                     </a>
                 </div>
                 <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6 xs:gap-8 sm:gap-10 lg:gap-14 mt-8">
-                    @foreach ($choseUs as $item)
-                        <div>
+                    @foreach ($choseUs as $idx => $item)
+                        <div data-aos="fade-up" data-aos-delay="{{ ($idx + 2) * 150 }}">
                             <x-icon name="{{ $item['icon'] }}" class="size-10 text-accent-2" />
                             <h3 class="mt-3 text-2xl font-bold">{{ $item['title'] }}</h3>
                             <p class="mt-1.5 text-muted">
@@ -96,7 +96,7 @@
                     @endforeach
                 </div>
             </div>
-            <img class="w-auto h-full max-w-lg mx-auto" src="/assets/mobile-application/mobile.png" alt="Mobile Application">
+            <img data-aos="fade-left" class="w-auto h-full max-w-lg mx-auto" src="/assets/mobile-application/mobile.png" alt="Mobile Application">
         </div>
     </section>
 </main>

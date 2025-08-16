@@ -64,9 +64,9 @@
 @endphp
 
 @section('content')
-<main class="bg-background overflow-x-hidden">
+<main class="bg-background overflow-hidden">
     <x-breadcrumb title="Graphic Design" />
-    <section class="container pt-5 sm:pt-7 lg:pt-12">
+    <section data-aos="fade-up" class="container pt-5 sm:pt-7 lg:pt-12">
         <div class="text-center text-foreground max-w-3xl mx-auto">
             <h1 class="text-2xl md:text-3xl font-extrabold">
                 The Art & Strategy of Exceptional Graphic Design
@@ -78,7 +78,7 @@
         <img src="/assets/graphic-design/base.png" alt="Graphic Design" class="w-full h-full object-cover max-w-5xl mx-auto mt-2">
     </section>
     <section class="container pt-12 sm:pt-16 lg:pt-28">
-        <div class="text-center max-w-4xl mx-auto">
+        <div data-aos="fade-up" class="text-center max-w-4xl mx-auto">
             <h1 class="text-[2rem] md:text-[2.5rem] leading-small font-extrabold mt-2">
                 Dedicated Remote Graphic Designer
             </h1>
@@ -87,8 +87,8 @@
             </p>
         </div>
         <div class="mt-12 lg:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-            @foreach($plans as $plan)
-                <div class="bg-white border border-border text-slate-800 rounded-2xl flex {{ $plan['isPopular'] ?? false ? 'shadow-2xl shadow-lime-500/20' : '' }}">
+            @foreach($plans as $idx => $plan)
+                <div data-aos="fade-up" data-aos-delay="{{ ($idx + 2) * 150 }}" class="bg-white border border-border text-slate-800 rounded-2xl flex {{ $plan['isPopular'] ?? false ? 'shadow-2xl shadow-lime-500/20' : '' }}">
                     <div class="mx-auto max-w-md w-full p-8 flex flex-col">
                         <div class="flex items-center">
                             <span class="inline-block {{ $plan['isPopular'] ?? false ? 'bg-basic' : 'bg-popular' }} text-sm font-semibold py-2 px-5 rounded-full">{{ $plan['name'] }}</span>
@@ -122,10 +122,10 @@
         </div>
     </section>
     <section class="container pt-12 sm:pt-16 lg:pt-28">
-        <x-title class="max-w-6xl" badge="Why Choose Us" heading="From agile startups to established enterprises, we craft bespoke creative journeys that reflect your unique ambitions" description="Don't just take our word for it — explore our portfolio  to see how we've helped brands like yours stand out with stunning, results-driven design." />
+        <x-title data-aos="fade-right" class="max-w-6xl" badge="Why Choose Us" heading="From agile startups to established enterprises, we craft bespoke creative journeys that reflect your unique ambitions" description="Don't just take our word for it — explore our portfolio  to see how we've helped brands like yours stand out with stunning, results-driven design." />
         <div class="relative z-10 mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <img class="w-full h-auto max-w-2xl" src="/assets/graphic-design/chose-us.png" alt="Graphic Design">
-            <div class="space-y-2 sm:space-y-4">
+            <img data-aos="fade-right" class="w-full h-auto max-w-2xl" src="/assets/graphic-design/chose-us.png" alt="Graphic Design">
+            <div data-aos="fade-left" class="space-y-2 sm:space-y-4">
                 <h2 class="text-2xl sm:text-3xl font-bold text-foreground">
                     Our end-to-end design partnership adapts to your needs, empowering businesses at every stage with artistry, strategy, and unparalleled attention to detail.
                 </h2>
@@ -149,10 +149,11 @@
         </div>
     </section>
     <section class="container py-10 sm:py-14 lg:py-24">
-        <x-title class="max-w-5xl" isCenter badge="Our Portfolio" heading="Let's See Our Best Artwork" description="We Impress your organization & customers with customization options, and enjoy stunning customer." />
+        <x-title data-aos="fade-up" class="max-w-5xl" isCenter badge="Our Portfolio" heading="Let's See Our Best Artwork" description="We Impress your organization & customers with customization options, and enjoy stunning customer." />
         <div class="mt-8 lg:mt-12 flex flex-col gap-5 sm:gap-10">
             @for ($i = 1; $i <= 12; $i++)
                 <img
+                    data-aos="fade-up"
                     src="/assets/graphic-design/portfolio/{{ $i }}.jpg"
                     alt="Portfolio {{ $i }}"
                     class="w-full h-auto mx-auto max-w-6xl rounded-xl shadow-lg"

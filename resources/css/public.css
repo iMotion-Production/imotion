@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms';
+@import './../../node_modules/aos/dist/aos.css';
 
 @source '../views/public';
 
@@ -50,6 +51,7 @@
 }
 
 @layer base {
+
     h1,
     h2,
     h3,
@@ -91,9 +93,11 @@
     0% {
         transform: perspective(200px) rotateX(0deg) rotateY(0deg);
     }
+
     50% {
         transform: perspective(200px) rotateX(-180deg) rotateY(0deg);
     }
+
     100% {
         transform: perspective(200px) rotateX(-180deg) rotateY(-180deg);
     }

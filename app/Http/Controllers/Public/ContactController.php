@@ -9,7 +9,8 @@ class ContactController extends Controller
     public function __invoke()
     {
         $title = 'Contact';
+        $script = 'contact';
 
-        return view('public.contact', compact('title'));
+        return view('public.contact', compact('title', 'script'));
     }
 }
