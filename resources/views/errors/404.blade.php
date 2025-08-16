@@ -1,4 +1,4 @@
-@extends('public/layouts/base')
+@extends('public/layouts/base', ['hideSEO' => true, 'title' => '404 Not Found'])
 
 @section('content')
 <main class="bg-background overflow-hidden">

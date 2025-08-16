@@ -123,4 +123,29 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Analytics
+    |--------------------------------------------------------------------------
+    |
+    | This value is used to set the Google Analytics ID for your application.
+    | It is used to integrate Google Analytics for tracking and analytics.
+    | You can set this in your ".env" file.
+    |
+    */
+    'ga_enabled' => (bool) env('APP_GA_ENABLED', false),
+    'ga_id' => env('APP_GA_ID', ''),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google Tag Manager
+    |--------------------------------------------------------------------------
+    |
+    | This value is used to set the Google Tag Manager ID for your application.
+    | It is used to integrate Google Tag Manager for tracking and analytics.
+    | You can set this in your ".env" file.
+    |
+    */
+    'gtm_enabled' => (bool) env('APP_GTM_ENABLED', false),
+    'gtm_id' => env('APP_GTM_ID', ''),
 ];
