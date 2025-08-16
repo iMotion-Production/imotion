@@ -1,0 +1,58 @@
+name: Deploy to cPanel
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build frontend
+        run: bun run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Adding Known Hosts
+        run: ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to cPanel
+        run: |
+            echo "Run auto deployment command..."
+            ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && \
+            git pull origin master && \
+            /home12/lvcbeaut/composer.phar install --no-ansi --no-dev --no-interaction --prefer-dist --no-plugins --no-progress --optimize-autoloader && \
+            php artisan sitemap:generate && \
+            php artisan optimize && \
+            php artisan migrate --force"
+
+            echo "Creating build.zip..."
+            cd public && zip -r build.zip build/* && cd ..
+
+            echo "Deploying build.zip..."
+            scp -P ${{ secrets.SSH_PORT }} public/build.zip ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_PATH }}/public/
+
+            echo "Updating assets build..."
+            ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.REMOTE_PATH }} && \
+            rm -rf public/build && \
+            unzip -o public/build.zip -d public/ && \
+            rm public/build.zip"
+
+            echo "Deployment successfully..."
+            echo "Cleaning up..."
