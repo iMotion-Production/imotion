@@ -6,37 +6,37 @@
             'title' => 'Graphic Design',
             'icon' => 'ri-customer-service-2-fill',
             'description' => 'Craft a powerful brand identity with stunning visuals that communicate your story and stand out in any market.  ',
-            'url' => '#'
+            'url' => route('service.graphic-design')
         ],
         [
             'title' => 'Digital Marketing',
             'icon' => 'ri-government-fill',
             'description' => 'Grow your online presence with strategic campaigns, engaging content, and proven SEO techniques that boost visibility and conversions.',
-            'url' => '#'
+            'url' => route('service.digital-marketing')
         ],
         [
             'title' => 'Social Media Management',
             'icon' => 'ri-pushpin-2-fill',
             'description' => 'Strategic content creation, scheduling, and engagement to grow your online community.',
-            'url' => '#'
+            'url' => route('contact')
         ],
         [
             'title' => 'Website Design & Development',
             'icon' => 'ri-pen-nib-line',
             'description' => 'Build a fast, responsive, and visually appealing website that reflects your brand and business goals.',
-            'url' => '#'
+            'url' => route('service.web-development')
         ],
         [
             'title' => 'Video Advertising',
             'icon' => 'ri-play-circle-line',
             'description' => 'Capture audiences with high-impact video ads, animated explainers, and immersive stories for digital and social media.',
-            'url' => '#'
+            'url' => route('contact')
         ],
         [
             'title' => 'Mobile App Design & Developments',
             'icon' => 'ri-smartphone-line',
             'description' => 'Create intuitive, user-friendly mobile apps that deliver seamless experiences across iOS and Android platforms.',
-            'url' => '#'
+            'url' => route('service.mobile-application')
         ]
     ];
 
@@ -148,11 +148,11 @@
                     From digital strategy, specialize in SEO - We Craft Digital Experiences That Engage, Convert, and Grow Your Business.
                 </p>
                 <div class="mt-4 sm:mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 sm:gap-4">
-                    <a href="#" class="flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
+                    <a href="https://www.facebook.com/imotionshack" class="flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
                         <span>Get Started</span>
                         <x-icon name="ri-arrow-right-line" class="size-5" />
                     </a>
-                    <a href="#" class="flex items-center justify-center gap-2 py-3 px-6 border border-accent-2 font-semibold text-foreground bg-transparent-1 hover:bg-accent-2 hover:text-background rounded-tl-xl rounded-br-xl transition-colors duration-300">
+                    <a href="{{ route('contact') }}" class="flex items-center justify-center gap-2 py-3 px-6 border border-accent-2 font-semibold text-foreground bg-transparent-1 hover:bg-accent-2 hover:text-background rounded-tl-xl rounded-br-xl transition-colors duration-300">
                         <span>Contact Us</span>
                         <x-icon name="ri-messenger-line" class="size-5" />
                     </a>
@@ -190,7 +190,7 @@
                     @endforeach
                 </ul>
                 <div class="mt-3 sm:mt-6">
-                    <a href="#" class="inline-flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
+                    <a href="{{ route('contact') }}" class="inline-flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
                         <span>View More</span>
                         <x-icon name="ri-arrow-right-line" class="size-5" />
                     </a>

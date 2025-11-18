@@ -188,7 +188,7 @@
                         </li>
                         @endforeach
                     </ul>
-                    <a href="#" class="flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
+                    <a href="https://whatsapp.imotion.my/creativedigitalmarketing" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
                         <span>Get Started</span>
                         <x-icon name="ri-arrow-right-line" class="size-5" />
                     </a>

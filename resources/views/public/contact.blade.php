@@ -5,17 +5,17 @@
         [
             'title' => 'Address',
             'icon' => 'ri-map-pin-line',
-            'content' => 'Level 4, Wisma Suria Jalan Teknokrat 6, Cyber 5 Cyberjaya, 63000 Sepang, Selangor, Malaysia'
+            'content' => '<a href="https://maps.app.goo.gl/yqkTXCtVCVUt9A7K7" target="_blank" rel="noopener noreferrer" class="underline decoration-2 decoration-accent-1 underline-offset-4">Level 4, Wisma Suria Jalan Teknokrat 6, Cyber 5 Cyberjaya, 63000 Sepang, Selangor, Malaysia</a>'
         ],
         [
             'title' => 'Telephone',
             'icon' => 'ri-phone-line',
-            'content' => '+60 3 5614 4615'
+            'content' => '<a href="tel:+60356144615" class="underline decoration-2 decoration-accent-1 underline-offset-4">+60 3 5614 4615</a>'
         ],
         [
             'title' => 'Email',
             'icon' => 'ri-mail-line',
-            'content' => 'helloimotion.pro@gmail.com'
+            'content' => '<a href="mailto:helloimotion.pro@gmail.com" class="underline decoration-2 decoration-accent-1 underline-offset-4">helloimotion.pro@gmail.com</a>'
         ],
         [
             'title' => 'WhatsApp',
@@ -32,7 +32,7 @@
 
 @section('content')
 
-<main class="py-16 lg:py-24 bg-background overflow-hidden">
+<main class="bg-background overflow-hidden">
     <x-breadcrumb title="Contact" />
     <section class="container py-10 sm:py-14 lg:py-24">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mx-auto">
@@ -74,10 +74,10 @@
                         <label for="message" class="block text-sm font-medium text-muted">Message</label>
                         <textarea required id="message" name="message" rows="5" class="w-full bg-white dark:bg-slate-900 border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent-1 min-h-16 max-h-52" required></textarea>
                     </div>
-                    <button type="button" class="flex items-center justify-center w-full gap-2 py-3 px-6 font-bold cursor-pointer text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
+                    <a href="mailto:connect@imotion.my" class="flex items-center justify-center w-full gap-2 py-3 px-6 font-bold cursor-pointer text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
                         <span>Send Message</span>
                         <x-icon name="ri-send-plane-line" class="size-5" />
-                    </button>
+                    </a>
                 </form>
             </div>
         </div>

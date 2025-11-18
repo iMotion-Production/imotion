@@ -57,7 +57,7 @@
                     @endforeach
                 </ul>
                 <div class="mt-3 sm:mt-6">
-                    <a href="#" class="inline-flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
+                    <a href="{{ route('contact') }}" class="inline-flex items-center justify-center gap-2 py-3 px-6 font-semibold text-background bg-accent-1 hover:bg-accent-1-hover rounded-tl-xl rounded-br-xl transition-colors duration-300">
                         <span>View More</span>
                         <x-icon name="ri-arrow-right-line" class="size-5" />
                     </a>

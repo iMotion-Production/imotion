@@ -3,31 +3,31 @@
         [
             'icon' => 'ri-messenger-line',
             'text' => 'Contact us',
-            'url' => '#',
+            'url' => 'https://facebook.com/imotionshack',
         ],
         [
             'icon' => 'ri-mail-fill',
-            'text' => 'hello@imotion.my',
-            'url' => 'mailto:hello@imotion.my',
+            'text' => 'connect@imotion.my',
+            'url' => 'mailto:connect@imotion.my',
         ]
     ];
 
     $socials = [
         [
             'icon' => 'ri-linkedin-box-fill',
-            'url' => 'https://linkedin.com',
+            'url' => 'https://linkedin.com/company/imotion-production',
         ],
         [
             'icon' => 'ri-instagram-line',
-            'url' => 'https://instagram.com',
+            'url' => 'https://instagram.com/imotion_production',
         ],
         [
             'icon' => 'ri-youtube-line',
-            'url' => 'https://youtube.com',
+            'url' => 'https://youtube.com/@imotion.production',
         ],
         [
             'icon' => 'ri-facebook-fill',
-            'url' => 'https://facebook.com',
+            'url' => 'https://facebook.com/imotionshack',
         ],
     ];
 
@@ -72,11 +72,6 @@
                     'url' => route('service.graphic-design'),
                 ],
             ]
-        ],
-        [
-            'text' => 'Portfolio',
-            'active' => 'portfolio',
-            'url' => '#',
         ],
         [
             'text' => 'Contact',

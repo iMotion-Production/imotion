@@ -61,6 +61,70 @@
             'description' => 'Strategic design that aligns with your campaigns, messaging, and business objectives — from product launches to investor reports.',
         ],
     ];
+
+    $galleries = [
+        [
+            'src' => '/assets/graphic-design/portfolio/1.jpg',
+            'alt' => 'Branding Visual Identity Design Zahab Ar Rahnu',
+            'link' => 'https://www.behance.net/gallery/200827627/Branding-Visual-Identity-Design-Zahab-Ar-Rahnu',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/2.jpg',
+            'alt' => 'Seo Optimization Olympia Education',
+            'link' => 'https://www.behance.net/gallery/238148017/SEO-OPTIMIZATION-OLYMPIA-EDUCATION',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/3.jpg',
+            'alt' => 'Website Design Development For Donnarica',
+            'link' => 'https://www.behance.net/gallery/204906291/Website-Design-Development-for-Donnarica',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/4.jpg',
+            'alt' => 'Visual Identity Design',
+            'link' => 'https://www.behance.net/gallery/215864643/Visual-Identity-Design',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/5.jpg',
+            'alt' => 'Company Profile Design Ocsb',
+            'link' => 'https://www.behance.net/gallery/214511041/Company-Profile-Design-OCSB',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/6.jpg',
+            'alt' => 'Packaging Design Kaikookies Sdn Bhd',
+            'link' => 'https://www.behance.net/gallery/216694855/Packaging-Design-Kaikookies-Sdn-Bhd',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/7.jpg',
+            'alt' => 'Corporate Magazine Design',
+            'link' => 'https://www.behance.net/gallery/188773171/Corporate-Magazine-Design',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/8.jpg',
+            'alt' => 'Financial Folder Design',
+            'link' => 'https://www.behance.net/gallery/188956791/Financial-Folder-Design',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/9.jpg',
+            'alt' => 'Social Media Design Secret Aglow',
+            'link' => 'https://www.behance.net/gallery/214326115/Social-Media-Design-Secret-Aglow',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/10.jpg',
+            'alt' => 'Visual Identity First Industrial Sdn Bhd',
+            'link' => 'https://www.behance.net/gallery/212868941/Visual-Identity-First-Industrial-Sdn-Bhd',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/11.jpg',
+            'alt' => 'Visual Identity Design UDML',
+            'link' => 'https://www.behance.net/gallery/214493601/Visual-Identity-Design-UDLM',
+        ],
+        [
+            'src' => '/assets/graphic-design/portfolio/12.jpg',
+            'alt' => 'Book Design Islam Nature',
+            'link' => 'https://www.behance.net/gallery/212685191/Book-Design-Islam-Nature',
+        ],
+    ];
+
 @endphp
 
 @section('content')
@@ -112,7 +176,7 @@
                                 <span class="text-4xl font-bold">RM {{ $plan['price'] }}</span>
                                 <span class="text-base font-medium text-slate-500">/monthly</span>
                             </p>
-                            <a href="#" class="block w-full text-center mt-6 py-3 px-6 font-semibold text-slate-800 {{ $plan['isPopular'] ?? false ? 'bg-basic hover:bg-basic-hover' : 'bg-popular hover:bg-popular-hover' }} rounded-lg transition-colors duration-300">
+                            <a href="https://whatsapp.imotion.my/creativedigitalmarketing" target="_blank" rel="noopener noreferrer" class="block w-full text-center mt-6 py-3 px-6 font-semibold text-slate-800 {{ $plan['isPopular'] ?? false ? 'bg-basic hover:bg-basic-hover' : 'bg-popular hover:bg-popular-hover' }} rounded-lg transition-colors duration-300">
                                 Choose Plan
                             </a>
                         </div>
@@ -151,14 +215,21 @@
     <section class="container py-10 sm:py-14 lg:py-24">
         <x-title data-aos="fade-up" class="max-w-5xl" isCenter badge="Our Portfolio" heading="Let's See Our Best Artwork" description="We Impress your organization & customers with customization options, and enjoy stunning customer." />
         <div class="mt-8 lg:mt-12 flex flex-col gap-5 sm:gap-10">
-            @for ($i = 1; $i <= 12; $i++)
-                <img
+            @foreach ($galleries as $gallery)
+                <a
                     data-aos="fade-up"
-                    src="/assets/graphic-design/portfolio/{{ $i }}.jpg"
-                    alt="Portfolio {{ $i }}"
-                    class="w-full h-auto mx-auto max-w-6xl rounded-xl shadow-lg"
-                />
-            @endfor
+                    href="{{ $gallery['link'] }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="block"
+                >
+                    <img
+                        src="{{ $gallery['src'] }}"
+                        alt="{{ $gallery['alt'] }}"
+                        class="w-full h-auto mx-auto max-w-6xl rounded-xl shadow-lg"
+                    />
+                </a>
+            @endforeach
         </div>
     </section>
 </main>

@@ -64,31 +64,39 @@
     $socials = [
         [
             'icon' => 'ri-linkedin-box-fill',
-            'url' => 'https://linkedin.com',
+            'url' => 'https://linkedin.com/company/imotion-production',
         ],
         [
             'icon' => 'ri-instagram-line',
-            'url' => 'https://instagram.com',
+            'url' => 'https://instagram.com/imotion_production',
         ],
         [
             'icon' => 'ri-youtube-line',
-            'url' => 'https://youtube.com',
+            'url' => 'https://youtube.com/@imotion.production',
         ],
         [
             'icon' => 'ri-facebook-fill',
-            'url' => 'https://facebook.com',
+            'url' => 'https://facebook.com/imotionshack',
         ],
         [
             'icon' => 'ri-pinterest-fill',
-            'url' => 'https://pinterest.com',
+            'url' => 'https://pinterest.com/imotionproduction',
         ],
         [
             'icon' => 'ri-github-fill',
-            'url' => 'https://github.com',
+            'url' => 'https://github.com/nadz87',
         ],
         [
             'icon' => 'ri-behance-fill',
-            'url' => 'https://behance.net',
+            'url' => 'https://behance.net/imotionpro',
+        ],
+        [
+            'icon' => 'ri-threads-line',
+            'url' => 'https://threads.com/@imotion_production',
+        ],
+        [
+            'icon' => 'ri-telegram-2-line',
+            'url' => 'https://t.me/iMotionz',
         ],
     ];
 @endphp
@@ -120,9 +128,9 @@
                             <x-icon name="ri-map-pin-2-fill" class="size-5 flex-shrink-0" />
                             <span>Wisma Sunu, Cyber 5/63000, Cyberjaya</span>
                         </a>
-                        <a href="mailto:connect@imotion.com.my" class="flex items-center gap-3 hover:text-accent-1 hover:underline underline-offset-2 transition-colors duration-300">
+                        <a href="mailto:connect@imotion.my" class="flex items-center gap-3 hover:text-accent-1 hover:underline underline-offset-2 transition-colors duration-300">
                             <x-icon name="ri-mail-fill" class="size-5 flex-shrink-0" />
-                            <span>connect@imotion.com.my</span>
+                            <span>connect@imotion.my</span>
                         </a>
                     </div>
                 </div>
@@ -144,7 +152,7 @@
                         Subscribe and stay up to date with the latest our tips and news.
                     </p>
                     <form class="mt-4 flex items-center w-full relative">
-                        <input type="email" placeholder="Email" class="w-full rounded-tl-2xl rounded-br-2xl border-white/30 bg-transparent p-4 pr-32 text-sm text-white placeholder:text-white/60 focus:border-accent-1 focus:ring-0">
+                        <input type="email" placeholder="Email" class="w-full rounded-tl-2xl rounded-br-2xl border-accent-1/30 bg-white p-4 pr-32 text-sm text-slate-900 placeholder:text-slate-900/60 focus:border-accent-1 focus:ring-0">
                         <button type="submit" class="absolute right-2 rounded-tl-xl rounded-br-xl bg-accent-1 px-5 py-2 text-sm font-semibold text-slate-900 hover:bg-accent-1-hover transition-colors">
                             Subscribe
                         </button>
