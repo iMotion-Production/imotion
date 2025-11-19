@@ -126,7 +126,7 @@
                     <div class="mt-6 space-y-4 text-sm text-white/80">
                         <a href="https://maps.app.goo.gl/yqkTXCtVCVUt9A7K7" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 hover:text-accent-1 hover:underline underline-offset-2 transition-colors duration-300">
                             <x-icon name="ri-map-pin-2-fill" class="size-5 flex-shrink-0" />
-                            <span>Wisma Sunu, Cyber 5/63000, Cyberjaya</span>
+                            <span>Wisma Suria, Cyber 5 63000, Cyberjaya</span>
                         </a>
                         <a href="mailto:connect@imotion.my" class="flex items-center gap-3 hover:text-accent-1 hover:underline underline-offset-2 transition-colors duration-300">
                             <x-icon name="ri-mail-fill" class="size-5 flex-shrink-0" />
