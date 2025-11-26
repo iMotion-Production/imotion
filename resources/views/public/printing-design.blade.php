@@ -130,12 +130,11 @@
         <x-title data-aos="fade-left" class="max-w-4xl" badge="Our Portfolio" heading="Let's See Our Best Work" description="We Impress your organization & customers with customization options, and enjoy easy customer and order management." />
         <div class="mt-10 lg:mt-14">
             @foreach ($portfolio as $item)
-                <div class="mt-10 lg:mt-14 text-center">
-                    <x-badge data-aos="fade-up" :title="$item['title']" />
+                <div class="mt-10 lg:mt-14 text-center" data-aos="fade-up">
+                    <x-badge :title="$item['title']" />
                     <div class="grid-masonry mt-6 lg:mt-8">
                     @for ($i = 1; $i <= $item['total']; $i++)
                         <img
-                            data-aos="fade-up"
                             src="/assets/printing-design/{{ $item['folder'] }}/{{ $i }}.png"
                             alt="{{ $item['title'] }} {{ $i }}"
                             class="grid-masonry-item mb-5 w-auto h-auto"
