@@ -135,7 +135,7 @@
                     <div class="grid-masonry mt-6 lg:mt-8">
                     @for ($i = 1; $i <= $item['total']; $i++)
                         <img
-                            data-aos="fade-up" data-aos-delay="{{ ($i + 1) * 150 }}"
+                            data-aos="fade-up"
                             src="/assets/printing-design/{{ $item['folder'] }}/{{ $i }}.png"
                             alt="{{ $item['title'] }} {{ $i }}"
                             class="grid-masonry-item mb-5 w-auto h-auto"
