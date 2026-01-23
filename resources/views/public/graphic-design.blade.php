@@ -143,7 +143,7 @@
     </section>
     <section class="container pt-12 sm:pt-16 lg:pt-28">
         <div data-aos="fade-up" class="text-center max-w-4xl mx-auto">
-            <h1 class="text-[2rem] md:text-[2.5rem] leading-small font-extrabold mt-2">
+            <h1 class="text-[2rem] md:text-[2.5rem] leading-small font-extrabold mt-2 text-foreground">
                 Dedicated Remote Graphic Designer
             </h1>
             <p class="mt-3 text-base text-muted max-w-3xl leading-relaxed mx-auto">
