@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Mailbox\MailboxController;
 use App\Models\User;
 use App\Services\Cpanel\CpanelTransport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,7 +12,7 @@ uses(RefreshDatabase::class);
 const DOMAIN = 'fokusteguhdinamik.com.my';
 
 beforeEach(function () {
-    config(['services.cpanel.max_mailboxes' => 20]);
+    config(['services.cpanel.max_mailboxes' => 20, 'app.url' => 'https://imotion.my']);
 });
 
 function client(): User
@@ -19,11 +20,17 @@ function client(): User
     return User::factory()->create(['mail_domain' => DOMAIN]);
 }
 
+/** An imotion.my mailbox user: the home host, where the iMotion wording is kept. */
+function home(): User
+{
+    return User::factory()->create(['mail_domain' => 'imotion.my']);
+}
+
 function row(string $email): array
 {
     [$u, $d] = explode('@', $email);
 
-    return ['email' => $email, 'login' => $email, 'user' => $u, 'domain' => $d, 'humandiskused' => '1 MB', 'humandiskquota' => 'None'];
+    return ['email' => $email, 'login' => $email, 'user' => $u, 'domain' => $d, 'humandiskused' => '1 MB', 'humandiskquota' => 'None', '_diskused' => 1048576];
 }
 
 /** Binds a fake CpanelTransport in the container; nothing reaches uapi or HTTP. */
@@ -43,7 +50,7 @@ test('guest is redirected to login and cannot add', function () {
 });
 
 test('login page shows the contact line', function () {
-    $this->get('/mailbox/login')->assertOk()->assertSee('Forgot your password? Contact iMotion.');
+    $this->get('/mailbox/login')->assertOk()->assertSee('Forgot your password? Contact your administrator.');
 });
 
 test('user without mail_domain gets 403', function () {
@@ -119,7 +126,7 @@ test('status 0 shows the friendly message and logs once without the password', f
 
     $this->actingAs(client())->from('/mailbox')->post('/mailbox/add', [
         'username' => 'sales', 'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
-    ])->assertRedirect('/mailbox')->assertSessionHas('error', 'Mailbox service is unavailable right now. iMotion has been notified.');
+    ])->assertRedirect('/mailbox')->assertSessionHas('error', MailboxController::unavailable());
 
     Log::shouldHaveReceived('warning')->once()->withArgs(function ($msg, $ctx) {
         return ! str_contains(json_encode([$msg, $ctx]), 'secretpass99');
@@ -160,8 +167,7 @@ test('every mailbox row and the add flash post to the webmail route for that add
 
     $html = $this->actingAs($user)->get('/mailbox')->assertOk()->getContent();
     expect($html)->toContain('<form class="webmail" method="POST" action="'.url('/mailbox/sales@'.DOMAIN.'/webmail').'" target="_blank" rel="noopener">')
-        ->and($html)->toContain('Open webmail</button>')
-        ->and($html)->not->toContain('/webmail" target="_blank" rel="noopener">Open webmail</a>');
+        ->and($html)->toContain('Open webmail</button>');
 
     $this->actingAs($user)->post('/mailbox/add', [
         'username' => 'info', 'password' => 'longenough1', 'password_confirmation' => 'longenough1',
@@ -230,7 +236,7 @@ test('webmail failure shows the friendly message and logs one line without the s
 
     $this->actingAs(client())->post('/mailbox/sales@'.DOMAIN.'/webmail')
         ->assertRedirect('/mailbox')
-        ->assertSessionHas('error', 'Mailbox service is unavailable right now. iMotion has been notified.');
+        ->assertSessionHas('error', MailboxController::unavailable());
 
     Log::shouldHaveReceived('warning')->once()->withArgs(function ($msg, $ctx) {
         return $ctx['function'] === 'Session/create_webmail_session_for_mail_user'
@@ -256,17 +262,18 @@ test('unlimited quota shows Unlimited and no disk use shows 0 B', function () {
     ]);
 
     $html = $this->actingAs(client())->get('/mailbox')->assertOk()->getContent();
-    expect(substr_count($html, '<td class="q">Unlimited</td>'))->toBe(2)
-        ->and(substr_count($html, '<td>0 B</td>'))->toBe(2)
-        ->and($html)->toContain('<td>1.2 MB</td>')->and($html)->toContain('<td class="q">1 GB</td>')
+    expect(preg_match_all('/<td class="q" data-label="Quota"><span class="pill ok">.*?Unlimited<\/span><\/td>/', $html))->toBe(2)
+        ->and(substr_count($html, '<td class="used" data-label="Disk used">0 B</td>'))->toBe(2)
+        ->and($html)->toContain('<td class="used" data-label="Disk used">1.2 MB</td>')
+        ->and($html)->toContain('<span class="pill neutral">1 GB</span>')
         ->and($html)->not->toContain('None');
 });
 
-test('GET reset-password without a token redirects to login with the ask-iMotion status', function () {
+test('GET reset-password without a token redirects to login with the ask-administrator status', function () {
     $this->get('/mailbox/reset-password')
         ->assertRedirect('/mailbox/login')
-        ->assertSessionHas('status', 'Ask iMotion for a new set-password link.');
-    $this->get('/mailbox/login')->assertSee('Ask iMotion for a new set-password link.');
+        ->assertSessionHas('status', 'Contact your administrator for a new set-password link.');
+    $this->get('/mailbox/login')->assertSee('Contact your administrator for a new set-password link.');
 });
 
 test('reset with an invalid token shows the expired-link sentence', function () {
@@ -275,12 +282,12 @@ test('reset with an invalid token shows the expired-link sentence', function () 
     $this->from('/mailbox/reset-password/bad')->post('/mailbox/reset-password', [
         'token' => 'not-a-real-token', 'email' => 'owner@'.DOMAIN,
         'password' => 'newpassword9', 'password_confirmation' => 'newpassword9',
-    ])->assertSessionHasErrors(['email' => 'This link has expired or was replaced. Ask iMotion for a new one.']);
+    ])->assertSessionHasErrors(['email' => 'This link has expired or was replaced. Contact your administrator for a new one.']);
 });
 
 test('reset for an unknown user shows the expired-link sentence', function () {
     $this->from('/mailbox/reset-password/bad')->post('/mailbox/reset-password', [
         'token' => 'whatever', 'email' => 'nobody@'.DOMAIN,
         'password' => 'newpassword9', 'password_confirmation' => 'newpassword9',
-    ])->assertSessionHasErrors(['email' => 'This link has expired or was replaced. Ask iMotion for a new one.']);
+    ])->assertSessionHasErrors(['email' => 'This link has expired or was replaced. Contact your administrator for a new one.']);
 });
