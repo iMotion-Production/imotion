@@ -86,3 +86,13 @@ test('login page on the client host shows the client logo; on imotion.my the iMo
     $this->get('https://'.CLIENT_HOST.'/mailbox/login')->assertOk()->assertSee(FTD_LOGO, false);
     $this->get('https://imotion.my/mailbox/login')->assertOk()->assertDontSee('/portal/logos/', false);
 });
+
+test('a client host names the client favicon and never the iMotion icon', function () {
+    $host = 'https://mailbox.fokusteguhdinamik.com.my';
+    User::factory()->create(['mail_domain' => 'fokusteguhdinamik.com.my', 'portal_host' => 'mailbox.fokusteguhdinamik.com.my']);
+    $html = $this->get($host.'/mailbox/login')->assertOk()->getContent();
+    expect($html)->toContain('href="/portal/favicons/fokusteguhdinamik.com.my.png"')
+        ->and($html)->not->toContain('/favicon.svg')
+        ->and(is_file(public_path('portal/favicons/fokusteguhdinamik.com.my.png')))->toBeTrue();
+    $this->get('https://imotion.my/mailbox/login')->assertOk()->assertSee('/favicon.svg', false);
+});

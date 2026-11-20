@@ -17,6 +17,15 @@
     @endphp
     @if ($isClient)
     <title>{{ $clientName ? $clientName.' · Mailboxes' : 'Mailboxes' }}</title>
+    @php
+        // Always name an icon on a client host: with no link the browser asks for /favicon.ico, which is iMotion's.
+        $iconFile = $logoDomain && preg_match('/^[a-z0-9.-]+$/', $logoDomain) ? 'portal/favicons/'.$logoDomain.'.png' : null;
+    @endphp
+    @if ($iconFile && is_file(public_path($iconFile)))
+    <link rel="icon" type="image/png" href="/{{ $iconFile }}">
+    @else
+    <link rel="icon" href="data:,">
+    @endif
     @else
     <title>@yield('title', 'Mailboxes') - {{ config('app.name') }}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
