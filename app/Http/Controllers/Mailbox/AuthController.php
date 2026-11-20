@@ -15,6 +15,10 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    public const LINK_EXPIRED = 'This link has expired or was replaced. Ask iMotion for a new one.';
+
+    public const LINK_MISSING = 'Ask iMotion for a new set-password link.';
+
     public function showLogin(): View
     {
         return view('mailbox.login');
@@ -50,6 +54,11 @@ class AuthController extends Controller
         return view('mailbox.reset-password', ['token' => $token, 'email' => (string) $request->query('email', '')]);
     }
 
+    public function resetWithoutToken(): RedirectResponse
+    {
+        return redirect()->route('mailbox.login')->with('status', self::LINK_MISSING);
+    }
+
     public function reset(Request $request): RedirectResponse
     {
         $request->validate([
@@ -68,6 +77,10 @@ class AuthController extends Controller
                 event(new PasswordReset($user));
             }
         );
+
+        if ($status === Password::INVALID_TOKEN || $status === Password::INVALID_USER) {
+            return back()->withErrors(['email' => self::LINK_EXPIRED])->onlyInput('email');
+        }
 
         if ($status !== Password::PASSWORD_RESET) {
             return back()->withErrors(['email' => __($status)])->onlyInput('email');

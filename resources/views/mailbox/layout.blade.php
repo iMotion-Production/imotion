@@ -21,8 +21,9 @@
         th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
         th { color: var(--muted); font-weight: 600; font-size: .8125rem; }
         td.addr { overflow-wrap: anywhere; }
-        td.addr .webmail { display: inline-block; margin-left: 8px; font-size: .875rem; white-space: nowrap; }
-        .flash a { white-space: nowrap; }
+        form.webmail { display: inline; }
+        td.addr form.webmail button { margin-left: 8px; font-size: .875rem; white-space: nowrap; }
+        .flash form.webmail button { color: var(--fg); white-space: nowrap; }
         label { display: block; font-size: .875rem; margin: 12px 0 4px; }
         input[type=email], input[type=password], input[type=text] { width: 100%; padding: 10px 12px; font: inherit; color: var(--fg); background: #0b0f1f; border: 1px solid var(--line); border-radius: 6px; }
         input:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }

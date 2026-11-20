@@ -26,6 +26,7 @@ Route::prefix('mailbox')->name('mailbox.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/login', [MailboxAuthController::class, 'showLogin'])->name('login');
         Route::post('/login', [MailboxAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.attempt');
+        Route::get('/reset-password', [MailboxAuthController::class, 'resetWithoutToken'])->name('reset.missing');
         Route::get('/reset-password/{token}', [MailboxAuthController::class, 'showReset'])->name('reset.show');
         Route::post('/reset-password', [MailboxAuthController::class, 'reset'])->middleware('throttle:5,1')->name('reset');
     });
@@ -36,5 +37,6 @@ Route::prefix('mailbox')->name('mailbox.')->group(function () {
         Route::get('/', [MailboxController::class, 'index'])->name('index');
         Route::post('/add', [MailboxController::class, 'add'])->middleware('throttle:20,1')->name('add');
         Route::post('/{address}/password', [MailboxController::class, 'password'])->middleware('throttle:20,1')->name('password');
+        Route::post('/{address}/webmail', [MailboxController::class, 'webmail'])->middleware('throttle:20,1')->name('webmail');
     });
 });

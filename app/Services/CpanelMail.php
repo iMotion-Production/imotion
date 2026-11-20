@@ -59,6 +59,35 @@ class CpanelMail
         ], true);
     }
 
+    /**
+     * One-time webmail login for a mailbox (Session::create_webmail_session_for_mail_user).
+     * The returned session is a credential: it goes to the browser once and is never logged or stored.
+     *
+     * @return array{hostname: ?string, token: string, session: string}
+     */
+    public function webmailSession(string $domain, string $user, string $clientIp): array
+    {
+        $this->assertUser($user);
+
+        $data = (array) $this->transport->call('Session', 'create_webmail_session_for_mail_user', [
+            'login' => $user,
+            'domain' => $domain,
+            'remote_address' => $clientIp,
+        ], true);
+
+        $hostname = isset($data['hostname']) && $data['hostname'] !== '' ? strtolower((string) $data['hostname']) : null;
+        $token = (string) ($data['token'] ?? '');
+        $session = (string) ($data['session'] ?? '');
+
+        // The reply builds a URL and a form field: accept only the shapes cPanel documents.
+        if (preg_match('#^/cpsess\d+$#', $token) !== 1 || $session === ''
+            || ($hostname !== null && preg_match('/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/', $hostname) !== 1)) {
+            throw new CpanelMailException('unexpected webmail session reply');
+        }
+
+        return ['hostname' => $hostname, 'token' => $token, 'session' => $session];
+    }
+
     /** Second line of defence after the controller: nothing else reaches argv. */
     private function assertUser(string $user): void
     {
