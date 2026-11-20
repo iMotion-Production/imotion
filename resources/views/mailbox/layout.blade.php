@@ -13,6 +13,9 @@
         main { max-width: 720px; margin: 0 auto; padding: 32px 16px 48px; }
         header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
         header svg { height: 28px; width: auto; color: var(--fg); }
+        /* Navy-on-transparent client logos need a light strip on this dark layout (replaced by the white redesign). */
+        .client-logo { display: inline-flex; background: #fff; padding: 10px 14px; border-radius: 8px; max-width: 100%; }
+        .client-logo img { display: block; height: 36px; width: auto; max-width: 100%; object-fit: contain; }
         h1 { font-size: 1.5rem; line-height: 1.2; margin: 0 0 16px; overflow-wrap: anywhere; }
         h2 { font-size: 1.125rem; margin: 32px 0 12px; }
         a { color: var(--fg); }
@@ -44,7 +47,20 @@
 <body>
 <main>
     <header>
-        <x-logo aria-label="{{ config('app.name') }}" role="img" />
+        @php
+            // Client logo: the logged-in user's mail_domain, else the user whose portal_host is this request host.
+            $logoDomain = auth()->user()?->mail_domain
+                ?? \App\Models\User::where('portal_host', strtolower(request()->getHost()))->value('mail_domain');
+            $logoFile = $logoDomain && preg_match('/^[a-z0-9.-]+$/', $logoDomain) ? 'mailbox/logos/'.$logoDomain.'.png' : null;
+            if ($logoFile && ! is_file(public_path($logoFile))) {
+                $logoFile = null;
+            }
+        @endphp
+        @if ($logoFile)
+            <span class="client-logo"><img src="/{{ $logoFile }}" alt="{{ $logoDomain }}" height="36"></span>
+        @else
+            <x-logo aria-label="{{ config('app.name') }}" role="img" />
+        @endif
         @auth
             <form method="POST" action="{{ route('mailbox.logout') }}">
                 @csrf

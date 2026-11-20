@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class MailboxClient extends Command
 {
-    protected $signature = 'mailbox:client {email} {domain} {--name=}';
+    protected $signature = 'mailbox:client {email} {domain} {--name=} {--host= : Client portal hostname, e.g. mailbox.example.com (empty string clears it)}';
 
     protected $description = 'Create or update a mailbox-portal client and print a one-time password-set link';
 
@@ -23,22 +23,39 @@ class MailboxClient extends Command
 
             return self::FAILURE;
         }
-        if (! preg_match('/^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/', $domain)) {
+        $hostPattern = '/^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/';
+        if (! preg_match($hostPattern, $domain)) {
             $this->error('Invalid domain.');
 
             return self::FAILURE;
         }
 
+        $host = $this->option('host');
+        if ($host !== null) {
+            $host = strtolower(trim($host));
+            if ($host !== '' && ! preg_match($hostPattern, $host)) {
+                $this->error('Invalid host.');
+
+                return self::FAILURE;
+            }
+        }
+
         $user = User::firstOrNew(['email' => $email]);
         $user->name = $this->option('name') ?: ($user->name ?: $domain);
         $user->mail_domain = $domain;
+        if ($host !== null) {
+            $user->portal_host = $host === '' ? null : $host;
+        }
         if (! $user->exists) {
             $user->password = Str::random(40);
         }
         $user->save();
 
         $token = Password::broker()->createToken($user);
-        $url = route('mailbox.reset.show', ['token' => $token, 'email' => $email]);
+        $path = route('mailbox.reset.show', ['token' => $token, 'email' => $email], false);
+        $url = $user->portal_host
+            ? 'https://'.$user->portal_host.$path
+            : rtrim((string) config('app.url'), '/').$path;
 
         $this->info("Client {$email} set for {$domain}.");
         $this->line($url);

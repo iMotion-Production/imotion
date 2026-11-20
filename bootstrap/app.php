@@ -11,6 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global (before routing) so unknown paths on a client host also get the plain 404, never the marketing 404 page.
+        $middleware->prepend(\App\Http\Middleware\HostGuard::class);
         $middleware->redirectGuestsTo(fn () => route('mailbox.login'));
         $middleware->redirectUsersTo(fn () => route('mailbox.index'));
         $middleware->alias(['mail.client' => \App\Http\Middleware\EnsureMailClient::class]);
