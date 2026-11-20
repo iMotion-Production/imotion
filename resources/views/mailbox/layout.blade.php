@@ -194,7 +194,7 @@
         }
         /* Client logo slot (hand-off "Client logo slot"). */
         .bar img.logo, .card img.logo { height: 40px; width: auto; max-width: 100%; display: block; }
-        .card img.logo { margin-bottom: 28px; }
+        .card img.logo { margin: 0 auto 28px; }
         /* Build: "Open webmail" is the existing POST form (one-click webmail login), styled as the design's links. */
         form.webmail { display: inline; margin: 0; }
         form.webmail button { margin: 0; padding: 0; background: none; border: 0; font: inherit; cursor: pointer; }
