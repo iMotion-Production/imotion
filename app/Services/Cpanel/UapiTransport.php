@@ -13,8 +13,8 @@ use Symfony\Component\Process\Process;
  * server as the account user, so no token, password or network is involved.
  *
  * The command is always an argv array (never a shell string): one item per
- * argument, so nothing is quoted or interpreted by a shell. Values are
- * URI-encoded inside their own `key=value` item, as cPanel requires on the CLI.
+ * argument, so nothing is quoted or interpreted by a shell. Values are passed
+ * raw inside their own `key=value` item; the uapi CLI does not URI-decode them.
  */
 class UapiTransport implements CpanelTransport
 {
@@ -36,7 +36,7 @@ class UapiTransport implements CpanelTransport
         $argv = [$this->bin, '--output=json', $module, $function];
 
         foreach ($params as $key => $value) {
-            $argv[] = $key.'='.rawurlencode((string) $value);
+            $argv[] = $key.'='.(string) $value;
         }
 
         return $argv;
@@ -93,7 +93,7 @@ class UapiTransport implements CpanelTransport
         foreach ($params as $value) {
             $value = (string) $value;
             if (strlen($value) >= 3) {
-                $text = str_replace([$value, rawurlencode($value)], '[redacted]', $text);
+                $text = str_replace($value, '[redacted]', $text);
             }
         }
 

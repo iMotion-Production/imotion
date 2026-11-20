@@ -69,7 +69,7 @@ test('uapi add builds the exact argv array', function () {
 
     expect($t->commands)->toBe([[
         '/usr/local/cpanel/bin/uapi', '--output=json', 'Email', 'add_pop',
-        'email=sales', 'domain='.T_DOMAIN, 'password=p%40ss%20w0rd%3B%24%28rm%20-rf%20~%29',
+        'email=sales', 'domain='.T_DOMAIN, 'password=p@ss w0rd;$(rm -rf ~)',
         'quota=0', 'send_welcome_email=0',
     ]]);
 });
