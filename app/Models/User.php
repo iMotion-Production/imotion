@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'mail_domain',
+        'portal_host',
         'password',
     ];
 

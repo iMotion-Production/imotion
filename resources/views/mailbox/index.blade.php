@@ -6,7 +6,7 @@
     <h1>Mailboxes for {{ $domain }}</h1>
 
     @if (session('success'))
-        <div class="flash" role="status">Done: {{ session('success') }}@if (session('added')) · <a href="https://{{ $domain }}/webmail" target="_blank" rel="noopener">Open webmail</a>@endif</div>
+        <div class="flash" role="status">Done: {{ session('success') }}@if (session('added')) · <form class="webmail" method="POST" action="{{ route('mailbox.webmail', ['address' => session('success')]) }}" target="_blank" rel="noopener">@csrf<button type="submit" class="link">Open webmail</button></form>@endif</div>
     @endif
     @if (session('error') || $failed)
         <div class="flash error" role="alert">{{ session('error') ?? \App\Http\Controllers\Mailbox\MailboxController::UNAVAILABLE }}</div>
@@ -24,7 +24,7 @@
                 <tr>
                     <td class="addr">
                         {{ $address }}
-                        <a class="webmail" href="https://{{ $domain }}/webmail" target="_blank" rel="noopener">Open webmail</a>
+                        <form class="webmail" method="POST" action="{{ route('mailbox.webmail', ['address' => $address]) }}" target="_blank" rel="noopener">@csrf<button type="submit" class="link">Open webmail</button></form>
                         <details>
                             <summary>Reset password</summary>
                             <form method="POST" action="{{ route('mailbox.password', ['address' => $address]) }}">
@@ -38,8 +38,8 @@
                             </form>
                         </details>
                     </td>
-                    <td>{{ $box['humandiskused'] ?? ($box['diskused'] ?? '') }}</td>
-                    <td class="q">{{ $box['humandiskquota'] ?? ($box['diskquota'] ?? '') }}</td>
+                    <td>{{ $box['used_display'] }}</td>
+                    <td class="q">{{ $box['quota_display'] }}</td>
                 </tr>
             @endforeach
             </tbody>

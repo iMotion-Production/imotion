@@ -154,19 +154,133 @@ test('mailbox:client prints a reset url and no password', function () {
     expect(User::where('email', 'owner@'.DOMAIN)->value('mail_domain'))->toBe(DOMAIN);
 });
 
-test('every mailbox row and the add flash link to the user domain webmail only', function () {
-    fakeCpanel([row('sales@'.DOMAIN), row('boss@other-client.com')]);
+test('every mailbox row and the add flash post to the webmail route for that address', function () {
+    fakeCpanel([row('sales@'.DOMAIN)]);
     $user = client();
 
     $html = $this->actingAs($user)->get('/mailbox')->assertOk()->getContent();
-    expect($html)->toContain('href="https://'.DOMAIN.'/webmail" target="_blank" rel="noopener">Open webmail</a>');
-    preg_match_all('#https://([^/"\s]+)/webmail#', $html, $m);
-    expect(array_values(array_unique($m[1])))->toBe([DOMAIN]);
+    expect($html)->toContain('<form class="webmail" method="POST" action="'.url('/mailbox/sales@'.DOMAIN.'/webmail').'" target="_blank" rel="noopener">')
+        ->and($html)->toContain('Open webmail</button>')
+        ->and($html)->not->toContain('/webmail" target="_blank" rel="noopener">Open webmail</a>');
 
     $this->actingAs($user)->post('/mailbox/add', [
         'username' => 'info', 'password' => 'longenough1', 'password_confirmation' => 'longenough1',
     ])->assertRedirect('/mailbox');
     $this->actingAs($user)->get('/mailbox')
         ->assertSee('Done: info@'.DOMAIN, false)
-        ->assertSee('<a href="https://'.DOMAIN.'/webmail" target="_blank" rel="noopener">Open webmail</a>', false);
+        ->assertSee('action="'.url('/mailbox/info@'.DOMAIN.'/webmail').'" target="_blank" rel="noopener">', false);
+});
+
+test('webmail route sends exactly login, domain, remote_address for the user domain', function () {
+    $fake = fakeCpanel([], ['status' => 1, 'errors' => null, 'data' => [
+        'hostname' => 'lux.ix-dns.com', 'token' => '/cpsess1234567890', 'session' => 'sales@x:AbC123:CREATE_WEBMAIL_SESSION_FOR_MAIL_USER,deadbeef',
+    ]]);
+
+    $this->actingAs(client())->post('/mailbox/Sales@'.DOMAIN.'/webmail', ['domain' => 'evil.com', 'login' => 'boss'], ['REMOTE_ADDR' => '203.0.113.7'])
+        ->assertOk();
+
+    $sent = $fake->sent('create_webmail_session_for_mail_user');
+    expect($sent)->toHaveCount(1);
+    $d = $sent[0];
+    ksort($d);
+    expect($d)->toBe(['domain' => DOMAIN, 'login' => 'sales', 'remote_address' => '203.0.113.7'])
+        ->and($fake->calls[0]['module'])->toBe('Session');
+});
+
+test('webmail for another domain address is 404 and calls nothing', function () {
+    $fake = fakeCpanel();
+    $this->post('/mailbox/sales@'.DOMAIN.'/webmail')->assertRedirect('/mailbox/login');
+    $this->actingAs(client())->post('/mailbox/boss@other-client.com/webmail')->assertNotFound();
+    $this->actingAs(client())->post('/mailbox/bad%20user@'.DOMAIN.'/webmail')->assertNotFound();
+    expect($fake->calls)->toBe([]);
+});
+
+test('webmail redirect page posts only the session to hostname:2096 token /login', function () {
+    fakeCpanel([], ['status' => 1, 'errors' => null, 'data' => [
+        'hostname' => 'lux.ix-dns.com', 'token' => '/cpsess1234567890', 'session' => 'sales@x:AbC123:CREATE,deadbeef',
+    ]]);
+
+    $res = $this->actingAs(client())->post('/mailbox/sales@'.DOMAIN.'/webmail')->assertOk();
+    $html = $res->getContent();
+
+    expect($html)->toContain('action="https://lux.ix-dns.com:2096/cpsess1234567890/login"')
+        ->and($html)->toContain('method="POST"')
+        ->and($html)->toContain('<input type="hidden" name="session" value="sales@x:AbC123:CREATE,deadbeef">')
+        ->and($html)->toContain('Opening webmail…')
+        ->and($html)->toContain('Continue</button>');
+    preg_match_all('#<input\b[^>]*>#', $html, $inputs);
+    expect($inputs[0])->toHaveCount(1);
+    expect($html)->not->toContain('_token')->and($html)->not->toContain(DOMAIN);
+    expect($res->headers->get('Cache-Control'))->toContain('no-store');
+});
+
+test('webmail falls back to the configured host when cPanel returns no hostname', function () {
+    config(['services.cpanel.webmail_host' => 'lux.ix-dns.com']);
+    fakeCpanel([], ['status' => 1, 'errors' => null, 'data' => [
+        'hostname' => null, 'token' => '/cpsess42', 'session' => 'abc',
+    ]]);
+
+    $this->actingAs(client())->post('/mailbox/sales@'.DOMAIN.'/webmail')
+        ->assertOk()->assertSee('action="https://lux.ix-dns.com:2096/cpsess42/login"', false);
+});
+
+test('webmail failure shows the friendly message and logs one line without the session', function () {
+    fakeCpanel([], ['status' => 0, 'errors' => ['Internal secret detail'], 'data' => null]);
+    Log::spy();
+
+    $this->actingAs(client())->post('/mailbox/sales@'.DOMAIN.'/webmail')
+        ->assertRedirect('/mailbox')
+        ->assertSessionHas('error', 'Mailbox service is unavailable right now. iMotion has been notified.');
+
+    Log::shouldHaveReceived('warning')->once()->withArgs(function ($msg, $ctx) {
+        return $ctx['function'] === 'Session/create_webmail_session_for_mail_user'
+            && $ctx['mailbox'] === 'sales@'.DOMAIN;
+    });
+});
+
+test('a malformed session reply is treated as a failure, never rendered', function () {
+    fakeCpanel([], ['status' => 1, 'errors' => null, 'data' => [
+        'hostname' => 'evil.example"><script>', 'token' => '/cpsess1', 'session' => 'abc',
+    ]]);
+    Log::spy();
+
+    $this->actingAs(client())->post('/mailbox/sales@'.DOMAIN.'/webmail')->assertRedirect('/mailbox');
+    Log::shouldHaveReceived('warning')->once()->withArgs(fn ($msg, $ctx) => ! str_contains(json_encode($ctx), 'abc'));
+});
+
+test('unlimited quota shows Unlimited and no disk use shows 0 B', function () {
+    fakeCpanel([
+        ['email' => 'a@'.DOMAIN, 'humandiskused' => 'None', 'humandiskquota' => 'None'],
+        ['email' => 'b@'.DOMAIN, 'diskused' => null, 'diskquota' => null],
+        ['email' => 'c@'.DOMAIN, 'humandiskused' => '1.2 MB', 'humandiskquota' => '1 GB'],
+    ]);
+
+    $html = $this->actingAs(client())->get('/mailbox')->assertOk()->getContent();
+    expect(substr_count($html, '<td class="q">Unlimited</td>'))->toBe(2)
+        ->and(substr_count($html, '<td>0 B</td>'))->toBe(2)
+        ->and($html)->toContain('<td>1.2 MB</td>')->and($html)->toContain('<td class="q">1 GB</td>')
+        ->and($html)->not->toContain('None');
+});
+
+test('GET reset-password without a token redirects to login with the ask-iMotion status', function () {
+    $this->get('/mailbox/reset-password')
+        ->assertRedirect('/mailbox/login')
+        ->assertSessionHas('status', 'Ask iMotion for a new set-password link.');
+    $this->get('/mailbox/login')->assertSee('Ask iMotion for a new set-password link.');
+});
+
+test('reset with an invalid token shows the expired-link sentence', function () {
+    User::factory()->create(['email' => 'owner@'.DOMAIN, 'mail_domain' => DOMAIN]);
+
+    $this->from('/mailbox/reset-password/bad')->post('/mailbox/reset-password', [
+        'token' => 'not-a-real-token', 'email' => 'owner@'.DOMAIN,
+        'password' => 'newpassword9', 'password_confirmation' => 'newpassword9',
+    ])->assertSessionHasErrors(['email' => 'This link has expired or was replaced. Ask iMotion for a new one.']);
+});
+
+test('reset for an unknown user shows the expired-link sentence', function () {
+    $this->from('/mailbox/reset-password/bad')->post('/mailbox/reset-password', [
+        'token' => 'whatever', 'email' => 'nobody@'.DOMAIN,
+        'password' => 'newpassword9', 'password_confirmation' => 'newpassword9',
+    ])->assertSessionHasErrors(['email' => 'This link has expired or was replaced. Ask iMotion for a new one.']);
 });
