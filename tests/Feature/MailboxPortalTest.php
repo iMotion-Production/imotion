@@ -167,3 +167,20 @@ test('mailbox:client prints a reset url and no password', function () {
         ->assertSuccessful();
     expect(User::where('email', 'owner@'.DOMAIN)->value('mail_domain'))->toBe(DOMAIN);
 });
+
+test('every mailbox row and the add flash link to the user domain webmail only', function () {
+    fakeCpanel([row('sales@'.DOMAIN), row('boss@other-client.com')]);
+    $user = client();
+
+    $html = $this->actingAs($user)->get('/mailbox')->assertOk()->getContent();
+    expect($html)->toContain('href="https://'.DOMAIN.'/webmail" target="_blank" rel="noopener">Open webmail</a>');
+    preg_match_all('#https://([^/"\s]+)/webmail#', $html, $m);
+    expect(array_values(array_unique($m[1])))->toBe([DOMAIN]);
+
+    $this->actingAs($user)->post('/mailbox/add', [
+        'username' => 'info', 'password' => 'longenough1', 'password_confirmation' => 'longenough1',
+    ])->assertRedirect('/mailbox');
+    $this->actingAs($user)->get('/mailbox')
+        ->assertSee('Done: info@'.DOMAIN, false)
+        ->assertSee('<a href="https://'.DOMAIN.'/webmail" target="_blank" rel="noopener">Open webmail</a>', false);
+});

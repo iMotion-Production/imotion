@@ -71,7 +71,7 @@ class MailboxController extends Controller
             return back()->with('error', self::UNAVAILABLE)->withInput($request->only('username'));
         }
 
-        return redirect()->route('mailbox.index')->with('success', $address);
+        return redirect()->route('mailbox.index')->with('success', $address)->with('added', true);
     }
 
     public function password(Request $request, string $address): RedirectResponse

@@ -6,7 +6,7 @@
     <h1>Mailboxes for {{ $domain }}</h1>
 
     @if (session('success'))
-        <div class="flash" role="status">Done: {{ session('success') }}</div>
+        <div class="flash" role="status">Done: {{ session('success') }}@if (session('added')) · <a href="https://{{ $domain }}/webmail" target="_blank" rel="noopener">Open webmail</a>@endif</div>
     @endif
     @if (session('error') || $failed)
         <div class="flash error" role="alert">{{ session('error') ?? \App\Http\Controllers\Mailbox\MailboxController::UNAVAILABLE }}</div>
@@ -24,6 +24,7 @@
                 <tr>
                     <td class="addr">
                         {{ $address }}
+                        <a class="webmail" href="https://{{ $domain }}/webmail" target="_blank" rel="noopener">Open webmail</a>
                         <details>
                             <summary>Reset password</summary>
                             <form method="POST" action="{{ route('mailbox.password', ['address' => $address]) }}">
