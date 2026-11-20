@@ -17,6 +17,15 @@
     @endphp
     @if ($isClient)
     <title>{{ $clientName ? $clientName.' · Mailboxes' : 'Mailboxes' }}</title>
+    @php
+        // Always name an icon on a client host: with no link the browser asks for /favicon.ico, which is iMotion's.
+        $iconFile = $logoDomain && preg_match('/^[a-z0-9.-]+$/', $logoDomain) ? 'portal/favicons/'.$logoDomain.'.png' : null;
+    @endphp
+    @if ($iconFile && is_file(public_path($iconFile)))
+    <link rel="icon" type="image/png" href="/{{ $iconFile }}">
+    @else
+    <link rel="icon" href="data:,">
+    @endif
     @else
     <title>@yield('title', 'Mailboxes') - {{ config('app.name') }}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -185,7 +194,7 @@
         }
         /* Client logo slot (hand-off "Client logo slot"). */
         .bar img.logo, .card img.logo { height: 40px; width: auto; max-width: 100%; display: block; }
-        .card img.logo { margin-bottom: 28px; }
+        .card img.logo { margin: 0 auto 28px; }
         /* Build: "Open webmail" is the existing POST form (one-click webmail login), styled as the design's links. */
         form.webmail { display: inline; margin: 0; }
         form.webmail button { margin: 0; padding: 0; background: none; border: 0; font: inherit; cursor: pointer; }
