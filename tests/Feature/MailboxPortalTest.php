@@ -1,22 +1,17 @@
 <?php
 
 use App\Models\User;
+use App\Services\Cpanel\CpanelTransport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Client\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Tests\Fakes\FakeCpanelTransport;
 
 uses(RefreshDatabase::class);
 
 const DOMAIN = 'fokusteguhdinamik.com.my';
 
 beforeEach(function () {
-    config([
-        'services.cpanel.host' => 'cpanel.test:2083',
-        'services.cpanel.user' => 'acct',
-        'services.cpanel.token' => 'TESTTOKEN',
-        'services.cpanel.max_mailboxes' => 20,
-    ]);
+    config(['services.cpanel.max_mailboxes' => 20]);
 });
 
 function client(): User
@@ -31,20 +26,20 @@ function row(string $email): array
     return ['email' => $email, 'login' => $email, 'user' => $u, 'domain' => $d, 'humandiskused' => '1 MB', 'humandiskquota' => 'None'];
 }
 
-function fakeCpanel(array $rows = [], array $writeReply = ['status' => 1, 'errors' => null, 'data' => null]): void
+/** Binds a fake CpanelTransport in the container; nothing reaches uapi or HTTP. */
+function fakeCpanel(array $rows = [], array $writeReply = ['status' => 1, 'errors' => null, 'data' => null]): FakeCpanelTransport
 {
-    Http::fake([
-        '*/execute/Email/list_pops_with_disk*' => Http::response(['status' => 1, 'errors' => null, 'data' => $rows]),
-        '*/execute/Email/add_pop*' => Http::response($writeReply),
-        '*/execute/Email/passwd_pop*' => Http::response($writeReply),
-    ]);
+    $fake = new FakeCpanelTransport($rows, $writeReply);
+    app()->instance(CpanelTransport::class, $fake);
+
+    return $fake;
 }
 
 test('guest is redirected to login and cannot add', function () {
-    Http::fake();
+    $fake = fakeCpanel();
     $this->get('/mailbox')->assertRedirect('/mailbox/login');
     $this->post('/mailbox/add', ['username' => 'x'])->assertRedirect('/mailbox/login');
-    Http::assertNothingSent();
+    expect($fake->calls)->toBe([]);
 });
 
 test('login page shows the contact line', function () {
@@ -66,64 +61,56 @@ test('dashboard lists only the user domain', function () {
 });
 
 test('add sends exactly the five fields with the user domain, ignoring a request domain', function () {
-    fakeCpanel();
+    $fake = fakeCpanel();
 
     $this->actingAs(client())->post('/mailbox/add', [
         'username' => 'sales', 'domain' => 'evil.com',
         'password' => 'longenough1', 'password_confirmation' => 'longenough1',
     ])->assertRedirect('/mailbox');
 
-    Http::assertSent(function (Request $r) {
-        if (! str_contains($r->url(), 'Email/add_pop')) {
-            return false;
-        }
-        $d = $r->data();
-        ksort($d);
-
-        return $d == ['domain' => DOMAIN, 'email' => 'sales', 'password' => 'longenough1', 'quota' => 0, 'send_welcome_email' => 0]
-            && $r->header('Authorization')[0] === 'cpanel acct:TESTTOKEN';
-    });
+    $sent = $fake->sent('add_pop');
+    expect($sent)->toHaveCount(1);
+    $d = $sent[0];
+    ksort($d);
+    expect($d)->toBe(['domain' => DOMAIN, 'email' => 'sales', 'password' => 'longenough1', 'quota' => 0, 'send_welcome_email' => 0]);
+    expect($fake->calls[1]['module'])->toBe('Email')->and($fake->calls[1]['write'])->toBeTrue();
 });
 
 test('username is lower-cased', function () {
-    fakeCpanel();
+    $fake = fakeCpanel();
     $this->actingAs(client())->post('/mailbox/add', [
         'username' => 'Sales', 'password' => 'longenough1', 'password_confirmation' => 'longenough1',
     ])->assertSessionHasNoErrors();
-    Http::assertSent(fn (Request $r) => str_contains($r->url(), 'add_pop') && $r['email'] === 'sales');
+    expect($fake->sent('add_pop')[0]['email'])->toBe('sales');
 });
 
 test('bad usernames are refused', function (string $name) {
-    fakeCpanel();
+    $fake = fakeCpanel();
     $this->actingAs(client())->post('/mailbox/add', [
         'username' => $name, 'password' => 'longenough1', 'password_confirmation' => 'longenough1',
     ])->assertSessionHasErrors('username');
-    Http::assertNotSent(fn (Request $r) => str_contains($r->url(), 'add_pop'));
+    expect($fake->sent('add_pop'))->toBe([]);
 })->with(['..x', 'a b', 'cpanel', str_repeat('a', 65)]);
 
 test('reset password sends email, domain, password to passwd_pop', function () {
-    fakeCpanel([row('sales@'.DOMAIN)]);
+    $fake = fakeCpanel([row('sales@'.DOMAIN)]);
     $this->actingAs(client())->post('/mailbox/sales@'.DOMAIN.'/password', [
         'password' => 'newpassword9', 'password_confirmation' => 'newpassword9',
     ])->assertRedirect('/mailbox');
 
-    Http::assertSent(function (Request $r) {
-        if (! str_contains($r->url(), 'Email/passwd_pop')) {
-            return false;
-        }
-        $d = $r->data();
-        ksort($d);
-
-        return $d == ['domain' => DOMAIN, 'email' => 'sales', 'password' => 'newpassword9'];
-    });
+    $sent = $fake->sent('passwd_pop');
+    expect($sent)->toHaveCount(1);
+    $d = $sent[0];
+    ksort($d);
+    expect($d)->toBe(['domain' => DOMAIN, 'email' => 'sales', 'password' => 'newpassword9']);
 });
 
 test('reset on another domain address is refused', function () {
-    fakeCpanel();
+    $fake = fakeCpanel();
     $this->actingAs(client())->post('/mailbox/boss@other-client.com/password', [
         'password' => 'newpassword9', 'password_confirmation' => 'newpassword9',
     ])->assertNotFound();
-    Http::assertNothingSent();
+    expect($fake->calls)->toBe([]);
 });
 
 test('status 0 shows the friendly message and logs once without the password', function () {
@@ -135,8 +122,7 @@ test('status 0 shows the friendly message and logs once without the password', f
     ])->assertRedirect('/mailbox')->assertSessionHas('error', 'Mailbox service is unavailable right now. iMotion has been notified.');
 
     Log::shouldHaveReceived('warning')->once()->withArgs(function ($msg, $ctx) {
-        return ! str_contains(json_encode([$msg, $ctx]), 'secretpass99')
-            && ! str_contains(json_encode([$msg, $ctx]), 'TESTTOKEN');
+        return ! str_contains(json_encode([$msg, $ctx]), 'secretpass99');
     });
 
     $this->get('/mailbox')->assertDontSee('Internal secret detail');
@@ -151,14 +137,14 @@ test('duplicate address shows the friendly duplicate message', function () {
 
 test('cap of 20: form hidden and add returns 422', function () {
     $rows = array_map(fn ($i) => row("u{$i}@".DOMAIN), range(1, 20));
-    fakeCpanel($rows);
+    $fake = fakeCpanel($rows);
     $user = client();
 
     $this->actingAs($user)->get('/mailbox')->assertOk()->assertDontSee('Add mailbox');
     $this->actingAs($user)->post('/mailbox/add', [
         'username' => 'extra', 'password' => 'longenough1', 'password_confirmation' => 'longenough1',
     ])->assertStatus(422);
-    Http::assertNotSent(fn (Request $r) => str_contains($r->url(), 'add_pop'));
+    expect($fake->sent('add_pop'))->toBe([]);
 });
 
 test('mailbox:client prints a reset url and no password', function () {

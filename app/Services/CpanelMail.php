@@ -2,18 +2,28 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
+use App\Services\Cpanel\CpanelTransport;
+use InvalidArgumentException;
 
 /**
  * The three cPanel UAPI calls the mailbox portal is allowed to make.
  * The domain argument must always come from the logged-in user's mail_domain.
+ * How cPanel is reached (local `uapi` command or HTTPS) is the bound CpanelTransport.
  */
 class CpanelMail
 {
+    public const USER_PATTERN = '/^[a-z0-9][a-z0-9._-]{0,63}$/';
+
+    public function __construct(private CpanelTransport $transport) {}
+
+    public function transportName(): string
+    {
+        return $this->transport->name();
+    }
+
     public function list(string $domain): array
     {
-        $rows = $this->call('GET', 'list_pops_with_disk', ['domain' => $domain]);
+        $rows = $this->transport->call('Email', 'list_pops_with_disk', ['domain' => $domain]);
 
         $suffix = '@'.strtolower($domain);
 
@@ -27,56 +37,33 @@ class CpanelMail
 
     public function add(string $domain, string $user, string $password): void
     {
-        $this->call('POST', 'add_pop', [
+        $this->assertUser($user);
+
+        $this->transport->call('Email', 'add_pop', [
             'email' => $user,
             'domain' => $domain,
             'password' => $password,
             'quota' => 0,
             'send_welcome_email' => 0,
-        ]);
+        ], true);
     }
 
     public function setPassword(string $domain, string $user, string $password): void
     {
-        $this->call('POST', 'passwd_pop', [
+        $this->assertUser($user);
+
+        $this->transport->call('Email', 'passwd_pop', [
             'email' => $user,
             'domain' => $domain,
             'password' => $password,
-        ]);
+        ], true);
     }
 
-    /**
-     * Secrets (mailbox passwords) go in a form-encoded POST body so they never
-     * land in a URL or the cPanel access log.
-     */
-    private function call(string $method, string $function, array $params): mixed
+    /** Second line of defence after the controller: nothing else reaches argv. */
+    private function assertUser(string $user): void
     {
-        $cfg = config('services.cpanel');
-        $url = 'https://'.$cfg['host'].'/execute/Email/'.$function;
-
-        $client = Http::withHeaders(['Authorization' => 'cpanel '.$cfg['user'].':'.$cfg['token']])
-            ->withOptions(['verify' => true])
-            ->timeout(15)
-            ->acceptJson();
-
-        try {
-            $response = $method === 'GET'
-                ? $client->get($url, $params)
-                : $client->asForm()->post($url, $params);
-        } catch (ConnectionException) {
-            throw new CpanelMailException('connection failed');
+        if (preg_match(self::USER_PATTERN, $user) !== 1) {
+            throw new InvalidArgumentException('Invalid mailbox user.');
         }
-
-        $json = $response->json();
-
-        if (! $response->successful() || ! is_array($json)) {
-            throw new CpanelMailException('http '.$response->status());
-        }
-
-        if (($json['status'] ?? 0) !== 1) {
-            throw new CpanelMailException((string) ($json['errors'][0] ?? 'unknown error'));
-        }
-
-        return $json['data'] ?? [];
     }
 }

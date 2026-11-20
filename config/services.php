@@ -36,6 +36,8 @@ return [
     ],
 
     'cpanel' => [
+        'transport' => env('CPANEL_TRANSPORT', 'uapi'),
+        'uapi_bin' => env('CPANEL_UAPI_BIN', 'uapi'),
         'host' => env('CPANEL_HOST'),
         'user' => env('CPANEL_USER'),
         'token' => env('CPANEL_API_TOKEN'),

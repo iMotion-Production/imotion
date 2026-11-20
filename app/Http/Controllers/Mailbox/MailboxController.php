@@ -46,7 +46,7 @@ class MailboxController extends Controller
         $request->merge(['username' => strtolower(trim((string) $request->input('username')))]);
 
         $data = $request->validate([
-            'username' => ['required', 'string', 'regex:/^[a-z0-9][a-z0-9._-]{0,63}$/'],
+            'username' => ['required', 'string', 'regex:'.CpanelMail::USER_PATTERN],
             'password' => ['required', 'string', 'min:10', 'confirmed'],
         ]);
 
@@ -83,7 +83,7 @@ class MailboxController extends Controller
         // The domain is never taken from the request: the address must belong to the user's own domain.
         abort_unless(str_ends_with($address, $suffix), 404);
         $user = substr($address, 0, -strlen($suffix));
-        abort_unless(preg_match('/^[a-z0-9][a-z0-9._-]{0,63}$/', $user) === 1, 404);
+        abort_unless(preg_match(CpanelMail::USER_PATTERN, $user) === 1, 404);
 
         $request->validate([
             'password' => ['required', 'string', 'min:10', 'confirmed'],
@@ -106,6 +106,7 @@ class MailboxController extends Controller
             'function' => 'Email/'.$function,
             'mailbox' => $address,
             'error' => $e->getMessage(),
+            'detail' => $e->detail,
         ]);
     }
 }
