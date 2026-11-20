@@ -113,7 +113,7 @@ test('uapi non-zero exit gives the friendly message and one log line without the
 
     $this->actingAs(User::factory()->create(['mail_domain' => T_DOMAIN]))->from('/mailbox')->post('/mailbox/add', [
         'username' => 'sales', 'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
-    ])->assertRedirect('/mailbox')->assertSessionHas('error', MailboxController::UNAVAILABLE);
+    ])->assertRedirect('/mailbox')->assertSessionHas('error', MailboxController::unavailable());
 
     Log::shouldHaveReceived('warning')->once()->withArgs(function ($msg, $ctx) {
         $all = json_encode([$msg, $ctx]);

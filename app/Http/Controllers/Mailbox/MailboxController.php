@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mailbox;
 use App\Http\Controllers\Controller;
 use App\Services\CpanelMail;
 use App\Services\CpanelMailException;
+use App\Support\Portal;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,6 +15,8 @@ use Illuminate\View\View;
 class MailboxController extends Controller
 {
     public const UNAVAILABLE = 'Mailbox service is unavailable right now. iMotion has been notified.';
+
+    public const UNAVAILABLE_CLIENT = 'Mailbox service is unavailable right now. Please try again later.';
 
     public const RESERVED = ['cpanel', 'postmaster', 'abuse', 'webmaster', 'root', 'admin'];
 
@@ -36,6 +39,7 @@ class MailboxController extends Controller
         return view('mailbox.index', [
             'domain' => $domain,
             'mailboxes' => array_map([self::class, 'withDisplaySizes'], $mailboxes),
+            'diskUsed' => self::bytes((int) array_sum(array_column($mailboxes, '_diskused'))),
             'failed' => $failed,
             'canAdd' => ! $failed && count($mailboxes) < $max,
         ]);
@@ -52,7 +56,7 @@ class MailboxController extends Controller
         ]);
 
         if (in_array($data['username'], self::RESERVED, true)) {
-            return back()->withErrors(['username' => 'This name is reserved; ask iMotion.'])->withInput($request->only('username'));
+            return back()->withErrors(['username' => Portal::isClient() ? 'This name is reserved.' : 'This name is reserved; ask iMotion.'])->withInput($request->only('username'));
         }
 
         $address = $data['username'].'@'.$domain;
@@ -69,7 +73,7 @@ class MailboxController extends Controller
             }
             $this->logFailure('add_pop', $address, $e);
 
-            return back()->with('error', self::UNAVAILABLE)->withInput($request->only('username'));
+            return back()->with('error', self::unavailable())->withInput($request->only('username'));
         }
 
         return redirect()->route('mailbox.index')->with('success', $address)->with('added', true);
@@ -90,7 +94,7 @@ class MailboxController extends Controller
         } catch (CpanelMailException $e) {
             $this->logFailure('passwd_pop', $address, $e);
 
-            return back()->with('error', self::UNAVAILABLE);
+            return back()->with('error', self::unavailable());
         }
 
         return redirect()->route('mailbox.index')->with('success', $address);
@@ -111,7 +115,7 @@ class MailboxController extends Controller
         } catch (CpanelMailException $e) {
             $this->logFailure('create_webmail_session_for_mail_user', $address, $e, 'Session');
 
-            return redirect()->route('mailbox.index')->with('error', self::UNAVAILABLE);
+            return redirect()->route('mailbox.index')->with('error', self::unavailable());
         }
 
         $hostname = $login['hostname'] ?? (string) config('services.cpanel.webmail_host', 'lux.ix-dns.com');
@@ -123,6 +127,24 @@ class MailboxController extends Controller
             ])
             ->header('Cache-Control', 'no-store, private')
             ->header('Referrer-Policy', 'no-referrer');
+    }
+
+    /** The unavailable sentence in the viewer's branding (the log line is unchanged). */
+    public static function unavailable(): string
+    {
+        return Portal::isClient() ? self::UNAVAILABLE_CLIENT : self::UNAVAILABLE;
+    }
+
+    /** Bytes (cPanel `_diskused`) in cPanel's humandiskused style, e.g. "1.2 MB". */
+    public static function bytes(int $bytes): string
+    {
+        if ($bytes <= 0) {
+            return '0 B';
+        }
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $i = min((int) floor(log($bytes, 1024)), 4);
+
+        return ($i === 0 ? (string) $bytes : number_format($bytes / 1024 ** $i, 1)).' '.$units[$i];
     }
 
     /** cPanel answers `None` for an unlimited quota and for no disk use yet. */

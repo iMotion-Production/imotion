@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mailbox;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\Portal;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,16 @@ class AuthController extends Controller
     public const LINK_EXPIRED = 'This link has expired or was replaced. Ask iMotion for a new one.';
 
     public const LINK_MISSING = 'Ask iMotion for a new set-password link.';
+
+    public static function linkExpired(): string
+    {
+        return Portal::isClient() ? 'This link has expired or was replaced. Contact your administrator for a new one.' : self::LINK_EXPIRED;
+    }
+
+    public static function linkMissing(): string
+    {
+        return Portal::isClient() ? 'Contact your administrator for a new set-password link.' : self::LINK_MISSING;
+    }
 
     public function showLogin(): View
     {
@@ -56,7 +67,7 @@ class AuthController extends Controller
 
     public function resetWithoutToken(): RedirectResponse
     {
-        return redirect()->route('mailbox.login')->with('status', self::LINK_MISSING);
+        return redirect()->route('mailbox.login')->with('status', self::linkMissing());
     }
 
     public function reset(Request $request): RedirectResponse
@@ -79,7 +90,7 @@ class AuthController extends Controller
         );
 
         if ($status === Password::INVALID_TOKEN || $status === Password::INVALID_USER) {
-            return back()->withErrors(['email' => self::LINK_EXPIRED])->onlyInput('email');
+            return back()->withErrors(['email' => self::linkExpired()])->onlyInput('email');
         }
 
         if ($status !== Password::PASSWORD_RESET) {
