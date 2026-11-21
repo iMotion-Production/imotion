@@ -14,6 +14,13 @@
             $logoFile = null;
         }
         $clientName = $isClient && $brandUser && trim((string) $brandUser->name) !== '' ? trim((string) $brandUser->name) : null;
+        // MP-03: photo background on the login and set-password screens only. The domain comes from the same server-side
+        // mapping as the logo, never from the URL; no file for a domain means the plain MP-02 page.
+        $bgBase = $logoDomain && preg_match('/^[a-z0-9.-]+$/', $logoDomain) && $__env->hasSection('auth') ? 'portal/backgrounds/'.$logoDomain : null;
+        $bgFile = $bgBase && is_file(public_path($bgBase.'.webp')) ? $bgBase.'.webp' : null;
+        $bgSmallFile = $bgFile && is_file(public_path($bgBase.'-1280.webp')) ? $bgBase.'-1280.webp' : $bgFile;
+        $bgPortraitFile = $bgFile && is_file(public_path($bgBase.'-portrait.webp')) ? $bgBase.'-portrait.webp' : $bgSmallFile;
+        $bgStyle = $bgFile ? "--auth-bg:url('/".$bgFile."'); --auth-bg-sm:url('/".$bgSmallFile."'); --auth-bg-portrait:url('/".$bgPortraitFile."');" : null;
     @endphp
     @if ($isClient)
     <title>{{ $clientName ? $clientName.' · Mailboxes' : 'Mailboxes' }}</title>
@@ -209,9 +216,40 @@
           .menu .pop form.webmail button svg.i { color: var(--ink-2); }
           .menu .pop form.webmail button:hover { background: var(--neutral-bg); }
         }
+        @if ($bgFile)
+        /* MP-03: client login background (HANDOFF-MP-03 login-bg.css). Applies only when the body has class "has-bg",
+           which the server adds only on a client host that has a background file. The card itself is unchanged. */
+
+        /* Card lift off the photo (all widths). Card size, fill, fields and text stay as approved. */
+        body.auth.has-bg .card { box-shadow: 0 24px 48px -12px rgba(11, 26, 57, .30), 0 4px 12px rgba(11, 26, 57, .12); }
+
+        /* Phones and tablets (< 1024 px): the photo turned a quarter (portrait file) fills the screen,
+           workers at the bottom, card on the calm concrete at the top. Every word stays on the opaque card.
+           Project Manager, 2026-11-21: "the worker should be on bottom which is remove the white background"; "Yes, use it". */
+        @media (max-width: 1023px) {
+          body.auth.has-bg {
+            min-height: 100vh; display: flex; align-items: flex-start;
+            background: #d9d6d0 var(--auth-bg-portrait) center bottom / cover no-repeat;
+          }
+          body.auth.has-bg main { margin: 0 auto; padding: 28px 20px 0; width: 100%; }
+        }
+
+        /* Desktop (>= 1024 px): full-bleed photo, workers on the left; card in the calm right side,
+           vertically centred, its right edge 8vw from the window edge. */
+        @media (min-width: 1024px) {
+          body.auth.has-bg {
+            min-height: 100vh; display: flex; align-items: center;
+            background: var(--sunk) var(--auth-bg-sm) left center / cover no-repeat;
+          }
+          body.auth.has-bg main { width: 100%; margin: 0 8vw 0 auto; padding-top: 48px; }
+        }
+        @media (min-width: 1281px), (min-width: 1024px) and (min-resolution: 1.5dppx) {
+          body.auth.has-bg { background-image: var(--auth-bg); }
+        }
+        @endif
     </style>
 </head>
-<body class="@yield('body', 'app')">
+<body class="@yield('body', 'app'){{ $bgFile ? ' has-bg' : '' }}"@if ($bgStyle) style="{{ $bgStyle }}"@endif>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol><symbol id="i-disk" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></symbol><symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></symbol><symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></symbol></svg>
 @hasSection('auth')
 <main>
