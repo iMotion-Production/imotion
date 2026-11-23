@@ -89,6 +89,8 @@
         body:has(.panel.open) .btn.primary[aria-controls=add] { background: #E9E0FF; box-shadow: inset 0 0 0 1px #D9CCFF; }
         .btn.solid { background: var(--violet); color: #fff; }
         .btn.solid:hover { background: var(--violet-hover); }
+        .btn.danger { background: #B42318; color: #fff; }
+        .btn.danger:hover { background: #912018; }
         button.link { margin: 0; min-height: var(--tap); padding: 0 4px; background: none; border: 0; font: inherit; font-weight: 500; color: var(--ink-2); cursor: pointer; }
         button.link:hover { color: var(--ink); text-decoration: underline; }
         .note { margin: 0; color: var(--ink-2); }
@@ -140,6 +142,11 @@
         td.act .menu { display: none; }
         td.act .links { display: flex; gap: 20px; }
         td.act .links a { display: inline-flex; align-items: center; min-height: var(--tap); font-weight: 600; color: var(--violet-fg); text-decoration: none; }
+        td.act .links a.danger { color: #B42318; }
+        /* Delete panel: the Cancel link sits beside the button with the same gap as the panel's other actions. */
+        .panel .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .panel .actions .btn { margin-top: 12px; }
+        @media (max-width: 719px) { .panel .actions .btn { width: 100%; margin-top: 0; } .panel .actions { margin-top: 12px; } }
         td.empty { padding: 32px 16px; text-align: center; color: var(--ink-2); }
         tr.panel-row { display: none; }
         tr.panel-row:target, tr.panel-row.open { display: block; }
@@ -196,6 +203,8 @@
           .menu .pop a { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 12px; border-radius: 6px; text-decoration: none; font-weight: 500; white-space: nowrap; }
           .menu .pop a svg.i { color: var(--ink-2); }
           .menu .pop a:hover { background: var(--neutral-bg); }
+          .menu .pop a.danger, .menu .pop a.danger svg.i { color: #B42318; }
+          .menu .pop a.danger:hover { background: var(--err-bg); }
           tr.panel-row:target, tr.panel-row.open { display: table-row; }
           tr.panel-row td { padding: 0 20px 20px; }
         }
@@ -250,7 +259,7 @@
     </style>
 </head>
 <body class="@yield('body', 'app'){{ $bgFile ? ' has-bg' : '' }}"@if ($bgStyle) style="{{ $bgStyle }}"@endif>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol><symbol id="i-disk" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></symbol><symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></symbol><symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol><symbol id="i-disk" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></symbol><symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></symbol><symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/><path d="M10 11v5M14 11v5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></symbol></svg>
 @hasSection('auth')
 <main>
 <div class="card">

@@ -292,6 +292,60 @@ test('reset for an unknown user shows the expired-link sentence', function () {
     ])->assertSessionHasErrors(['email' => 'This link has expired or was replaced. Contact your administrator for a new one.']);
 });
 
+test('the three-dot menu has a Delete link and each mailbox a delete confirmation panel', function () {
+    fakeCpanel([row('sales@'.DOMAIN)]);
+    $user = client();
+
+    $html = $this->actingAs($user)->get('/mailbox')->assertOk()->getContent();
+
+    expect($html)->toContain('<a class="danger" href="#delete-0"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a>')
+        ->and($html)->toContain('<a class="danger" href="#delete-0">Delete</a>')
+        ->and($html)->toContain('<symbol id="i-trash" viewBox="0 0 24 24">')
+        ->and($html)->toContain('<tr class="panel-row" id="delete-0">')
+        ->and($html)->toContain('<form method="POST" action="'.url('/mailbox/sales@'.DOMAIN.'/delete').'">')
+        ->and($html)->toContain('This permanently deletes the mailbox and all its mail. This cannot be undone.')
+        ->and($html)->toContain('<button type="submit" class="btn danger">Delete mailbox</button>');
+
+    preg_match('#<tr class="panel-row" id="delete-0">.*?</tr>#s', $html, $m);
+    expect($m[0] ?? '')->toContain('<h2>Delete mailbox</h2>')
+        ->and($m[0])->toContain('<p class="sub">sales@'.DOMAIN.'</p>')
+        ->and($m[0])->toContain('name="_token"', false)
+        ->and($m[0])->toContain('<a class="btn" href="#">Cancel</a>');
+});
+
+test('the delete panel of the second mailbox points at that mailbox', function () {
+    fakeCpanel([row('sales@'.DOMAIN), row('info@'.DOMAIN)]);
+
+    $html = $this->actingAs(client())->get('/mailbox')->assertOk()->getContent();
+
+    expect($html)->toContain('<a class="danger" href="#delete-1">')
+        ->and($html)->toContain('<tr class="panel-row" id="delete-1">')
+        ->and($html)->toContain('<form method="POST" action="'.url('/mailbox/info@'.DOMAIN.'/delete').'">')
+        ->and($html)->not->toContain('<tr class="panel-row" id="delete-2">');
+});
+
+test('after a delete the index page shows the deleted flash with the address', function () {
+    fakeCpanel([row('sales@'.DOMAIN)]);
+
+    $this->actingAs(client())->post('/mailbox/sales@'.DOMAIN.'/delete')->assertRedirect('/mailbox');
+
+    $this->get('/mailbox')
+        ->assertOk()
+        ->assertSee('<div class="flash" role="status"><span>Deleted: sales@'.DOMAIN.'</span></div>', false)
+        ->assertDontSee('Done: sales@'.DOMAIN, false);
+});
+
+test('the client host index page contains no iMotion wording', function () {
+    $host = 'https://mailbox.fokusteguhdinamik.com.my';
+    fakeCpanel([row('sales@fokusteguhdinamik.com.my')]);
+
+    $html = $this->actingAs(User::factory()->create(['mail_domain' => 'fokusteguhdinamik.com.my', 'portal_host' => 'mailbox.fokusteguhdinamik.com.my']))
+        ->get($host.'/mailbox')->assertOk()->getContent();
+
+    expect(preg_match('/imotion/i', $html))->toBe(0)
+        ->and($html)->toContain('<tr class="panel-row" id="delete-0">');
+});
+
 test('delete a mailbox of the user domain sends email, domain, flush to delete_pop', function () {
     $fake = fakeCpanel([row('sales@'.DOMAIN)]);
 
