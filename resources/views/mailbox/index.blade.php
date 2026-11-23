@@ -12,8 +12,11 @@
         </dl>
     @endunless
 
-    @if (session('success'))
+    @if (session('success') && ! session('deleted'))
         <div class="flash" role="status"><span>Done: {{ session('success') }}</span>@if (session('added'))<form class="webmail" method="POST" action="{{ route('mailbox.webmail', ['address' => session('success')]) }}" target="_blank" rel="noopener">@csrf<button type="submit">Open webmail</button></form>@endif</div>
+    @endif
+    @if (session('deleted'))
+        <div class="flash" role="status"><span>Deleted: {{ session('deleted') }}</span></div>
     @endif
     @if (session('error') || $failed)
         <div class="flash error" role="alert">{{ session('error') ?? \App\Http\Controllers\Mailbox\MailboxController::unavailable() }}</div>
@@ -71,8 +74,8 @@
                     <td class="st" data-label="Status">@if ($suspended)<span class="pill warn">Suspended</span>@else<span class="pill ok"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Active</span>@endif</td>
                     <td class="act">
                         <details class="menu"><summary aria-label="Action: {{ $address }}"><svg class="i" aria-hidden="true"><use href="#i-dots"/></svg></summary>
-                            <div class="pop"><a href="#reset-{{ $loop->index }}"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit"><svg class="i" aria-hidden="true"><use href="#i-out"/></svg>Open webmail</button></form></div></details>
-                        <div class="links"><a href="#reset-{{ $loop->index }}">Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit">Open webmail</button></form></div>
+                            <div class="pop"><a href="#reset-{{ $loop->index }}"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit"><svg class="i" aria-hidden="true"><use href="#i-out"/></svg>Open webmail</button></form><a class="danger" href="#delete-{{ $loop->index }}"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></details>
+                        <div class="links"><a href="#reset-{{ $loop->index }}">Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit">Open webmail</button></form><a class="danger" href="#delete-{{ $loop->index }}">Delete</a></div>
                     </td>
                 </tr>
                 <tr class="panel-row" id="reset-{{ $loop->index }}"><td colspan="5"><div class="panel">
@@ -85,6 +88,14 @@
                         <input id="pwc-{{ $loop->index }}" type="password" name="password_confirmation" required minlength="10" autocomplete="new-password" data-pw>
                         <label class="show"><input type="checkbox" data-show-password> Show password</label>
                         <button type="submit" class="btn solid">Reset password</button>
+                    </form>
+                </div></td></tr>
+                <tr class="panel-row" id="delete-{{ $loop->index }}"><td colspan="5"><div class="panel">
+                    <h2>Delete mailbox</h2><p class="sub">{{ $address }}</p>
+                    <p>This permanently deletes the mailbox and all its mail. This cannot be undone.</p>
+                    <form method="POST" action="{{ route('mailbox.delete', ['address' => $address]) }}">
+                        @csrf
+                        <div class="actions"><button type="submit" class="btn danger">Delete mailbox</button><a class="btn" href="#">Cancel</a></div>
                     </form>
                 </div></td></tr>
             @empty
