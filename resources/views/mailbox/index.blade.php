@@ -34,7 +34,7 @@
         </div>
 
         @if ($canAdd)
-            <section class="panel{{ $errors->has('username') ? ' open' : '' }}" id="add" aria-labelledby="add-h">
+            <section class="panel{{ $errors->has('username') || ($errors->has('password') && old('username') !== null) ? ' open' : '' }}" id="add" aria-labelledby="add-h">
                 <h2 id="add-h">Add mailbox</h2>
                 <form method="POST" action="{{ route('mailbox.add') }}">
                     @csrf

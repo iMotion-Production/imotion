@@ -18,4 +18,10 @@ class CpanelMailException extends RuntimeException
     {
         return str_contains(strtolower($this->getMessage()), 'already exists');
     }
+
+    /** cPanel refused the password itself (strength rating), not the service. */
+    public function isWeakPassword(): bool
+    {
+        return str_contains(strtolower($this->getMessage()), 'strength rating');
+    }
 }

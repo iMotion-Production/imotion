@@ -20,6 +20,8 @@ class MailboxController extends Controller
 
     public const RESERVED = ['cpanel', 'postmaster', 'abuse', 'webmaster', 'root', 'admin'];
 
+    public const WEAK_PASSWORD = 'This password is too weak. Use at least 12 characters with upper and lower case letters, a number and a symbol.';
+
     public function __construct(private CpanelMail $cpanel) {}
 
     public function index(Request $request): View
@@ -71,6 +73,9 @@ class MailboxController extends Controller
             if ($e->isDuplicate()) {
                 return back()->withErrors(['username' => 'This address already exists.'])->withInput($request->only('username'));
             }
+            if ($e->isWeakPassword()) {
+                return back()->withErrors(['password' => self::WEAK_PASSWORD])->withInput($request->only('username'));
+            }
             $this->logFailure('add_pop', $address, $e);
 
             return back()->with('error', self::unavailable())->withInput($request->only('username'));
@@ -92,6 +97,9 @@ class MailboxController extends Controller
         try {
             $this->cpanel->setPassword($domain, $user, (string) $request->input('password'));
         } catch (CpanelMailException $e) {
+            if ($e->isWeakPassword()) {
+                return back()->withErrors(['password' => self::WEAK_PASSWORD]);
+            }
             $this->logFailure('passwd_pop', $address, $e);
 
             return back()->with('error', self::unavailable());
