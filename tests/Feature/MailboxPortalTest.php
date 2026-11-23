@@ -475,3 +475,9 @@ test('a failed delete goes back with the friendly message and no deleted key', f
         return $ctx['function'] === 'Email/delete_pop' && $ctx['mailbox'] === 'sales@'.DOMAIN;
     });
 });
+
+test('the weak password message names real words and sequences like 1234', function () {
+    expect(MailboxController::WEAK_PASSWORD)
+        ->toContain('no real words')
+        ->toContain('1234');
+});

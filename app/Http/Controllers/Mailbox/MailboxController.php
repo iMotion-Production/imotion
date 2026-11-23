@@ -20,7 +20,7 @@ class MailboxController extends Controller
 
     public const RESERVED = ['cpanel', 'postmaster', 'abuse', 'webmaster', 'root', 'admin'];
 
-    public const WEAK_PASSWORD = 'This password is too weak. Use at least 12 characters with upper and lower case letters, a number and a symbol.';
+    public const WEAK_PASSWORD = 'This password is too easy to guess. Use a random mix of at least 12 letters, numbers and symbols, with no real words and no sequences like 1234.';
 
     public function __construct(private CpanelMail $cpanel) {}
 
