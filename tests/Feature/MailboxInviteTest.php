@@ -333,7 +333,8 @@ test('after an invite the index shows that mailbox invite link once, with a copy
         ->assertSee('value="'.e($link).'" readonly', false)
         ->assertSee('data-copy="#invite-link"', false)
         ->assertSee('Copy link')
-        ->assertSee('Send this to the person. It works once and expires in 72 hours.');
+        ->assertSee('Send this to the person. It works once and expires in 72 hours.')
+        ->assertDontSee('This link lets the person set their own password.');
 
     // Only that mailbox's row: one panel and one link value on the page.
     $res->assertSee('class="panel invite-panel"', false)

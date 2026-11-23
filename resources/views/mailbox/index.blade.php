@@ -93,7 +93,6 @@
                 @if (session('invite_for') === $address && session('invite_link'))
                     <tr class="panel-row open" id="invite-panel"><td colspan="5"><div class="panel invite-panel">
                         <h2>Invite link for {{ $address }}</h2>
-                        <p class="sub">This link lets the person set their own password.</p>
                         <div class="copy">
                             <input id="invite-link" type="text" value="{{ session('invite_link') }}" readonly aria-label="Invite link">
                             <button type="button" class="btn sm secondary" data-copy="#invite-link"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Copy link</button>
