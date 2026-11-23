@@ -134,13 +134,21 @@ test('the join page on the client host shows the form with the security headers'
     $res->assertSee('Set your password')
         ->assertSee('sales@'.INV_DOMAIN)
         ->assertSee('data-generate-password', false)
+        ->assertSee('<p class="addr">sales@'.INV_DOMAIN.'</p>', false)
+        ->assertSee('<input type="email" name="username" value="sales@'.INV_DOMAIN.'" autocomplete="username" hidden>', false)
+        ->assertSee('minlength="12"', false)
         ->assertSee('<button type="submit" class="btn solid">Set password</button>', false);
+
+    $html = $res->getContent();
+    expect(substr_count($html, 'minlength="12"'))->toBe(2)
+        ->and(substr_count($html, '<p class="addr">'))->toBe(1)
+        ->and(substr_count($html, 'name="username"'))->toBe(1)
+        ->and(preg_match('/name="password"[^>]*minlength="12"/', $html))->toBe(1);
 
     expect($res->headers->get('Referrer-Policy'))->toBe('no-referrer')
         ->and($res->headers->get('Cache-Control'))->toContain('no-store')
         ->and($res->headers->get('Cache-Control'))->toContain('private');
 
-    $html = $res->getContent();
     expect(preg_match('/imotion/i', $html))->toBe(0)
         ->and(preg_match('/cpanel/i', $html))->toBe(0);
 });
@@ -154,7 +162,18 @@ test('the join page on another host is 404', function () {
 test('an unknown token is 410', function () {
     invAdmin();
 
-    $this->get('https://'.INV_HOST.'/mailbox/join/'.Str::random(48))->assertStatus(410);
+    $res = $this->get('https://'.INV_HOST.'/mailbox/join/'.Str::random(48))->assertStatus(410);
+
+    $res->assertSee('<p class="msg" role="status">This link has expired or was already used. Ask your administrator for a new one.</p>', false)
+        ->assertSee('This link has expired or was already used. Ask your administrator for a new one.')
+        ->assertDontSee('<h1', false);
+
+    expect($res->headers->get('Referrer-Policy'))->toBe('no-referrer')
+        ->and($res->headers->get('Cache-Control'))->toContain('no-store');
+
+    $html = $res->getContent();
+    expect(preg_match('/imotion/i', $html))->toBe(0)
+        ->and(preg_match('/cpanel/i', $html))->toBe(0);
 });
 
 test('an expired token is 410', function () {
@@ -191,17 +210,44 @@ test('setting a strong password calls passwd_pop once and opens webmail', functi
     expect($invite->fresh()->used_at)->not->toBeNull();
 
     $res->assertSee('Your password is set')
+        ->assertSee('<p class="url">https://'.INV_HOST.'/mailbox/webmail</p>', false)
         ->assertSee('https://'.INV_HOST.'/mailbox/webmail')
+        ->assertSee('Bookmark this for every day:')
         ->assertSee('<form method="post" action="https://lux.ix-dns.com:2096/cpsess1234567890/login">', false)
         ->assertSee('<input type="hidden" name="session" value="sales@x:AbC123:CREATE_WEBMAIL_SESSION_FOR_MAIL_USER,deadbeef">', false)
         ->assertSee('Open webmail</button>', false);
 
+    // The session form is the button; the plain bookmark link is not rendered alongside it.
+    $html = $res->getContent();
+    expect(substr_count($html, '<button class="btn solid">Open webmail</button>'))->toBe(1)
+        ->and(substr_count($html, '<p class="url">'))->toBe(1)
+        ->and(preg_match('/<a class="btn solid" href=/', $html))->toBe(0);
+
     expect($res->headers->get('Referrer-Policy'))->toBe('no-referrer')
         ->and($res->headers->get('Cache-Control'))->toContain('no-store');
 
-    $html = $res->getContent();
     expect(preg_match('/imotion/i', $html))->toBe(0)
         ->and(preg_match('/cpanel/i', $html))->toBe(0);
+});
+
+test('when no webmail session is created the done page offers the bookmark link instead', function () {
+    // The fake's default write reply carries no webmail session data, so no one-click login is built.
+    invFake([]);
+    [$invite, $token] = invMake(invAdmin());
+
+    $res = $this->post('https://'.INV_HOST.'/mailbox/join/'.$token, [
+        'password' => 'Stronger-pass-42', 'password_confirmation' => 'Stronger-pass-42',
+    ])->assertOk();
+
+    $res->assertSee('<a class="btn solid" href="https://'.INV_HOST.'/mailbox/webmail">Open webmail</a>', false)
+        ->assertSee('<p class="url">https://'.INV_HOST.'/mailbox/webmail</p>', false)
+        ->assertSee('Bookmark this for every day:');
+
+    $html = $res->getContent();
+    expect(preg_match('/<form method="post" action=/', $html))->toBe(0)
+        ->and(substr_count($html, '<a class="btn solid" href='))->toBe(1);
+
+    expect($invite->fresh()->used_at)->not->toBeNull();
 });
 
 test('a weak password from cPanel keeps the invite usable', function () {

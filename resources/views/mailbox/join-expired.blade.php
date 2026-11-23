@@ -5,6 +5,5 @@
 @section('auth', '1')
 
 @section('content')
-    <h1>Link expired</h1>
-    <p>This link has expired or was already used. Ask your administrator for a new one.</p>
+    <p class="msg" role="status">This link has expired or was already used. Ask your administrator for a new one.</p>
 @endsection

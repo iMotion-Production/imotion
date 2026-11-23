@@ -176,7 +176,11 @@
         .card svg.logo { height: 28px; width: auto; color: var(--ink); display: block; margin-bottom: 28px; }
         .card .btn { width: 100%; margin-top: 16px; }
         .card .muted { color: var(--ink-2); margin: 20px 0 0; text-align: center; }
-        .card .sub { margin: -12px 0 20px; color: var(--ink-2); overflow-wrap: anywhere; }
+        .card .sub, .card .addr { margin: -12px 0 20px; color: var(--ink-2); overflow-wrap: anywhere; }
+        /* MP-05 B: done page (bookmark line and the webmail address as selectable text) and the expired page's single message. */
+        .card .bookmark { margin: 24px 0 6px; color: var(--ink-2); }
+        .card .url { margin: 0; padding: 10px 12px; background: var(--sunk); border: 1px solid var(--line); border-radius: 8px; font-weight: 500; color: var(--ink); overflow-wrap: anywhere; user-select: all; -webkit-user-select: all; cursor: text; }
+        .card .msg { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--ink); text-align: center; }
 
         @media (max-width: 719px) { .toolbar .btn.primary, .toolbar .note { width: 100%; } }
         /* Fix round 1 (W001): one stat card per row below 560 px, so a 4-digit total ("1,234.5 MB") fits its card. */
