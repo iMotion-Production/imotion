@@ -49,7 +49,7 @@
                     <input id="new-password" type="password" name="password" required minlength="10" autocomplete="new-password" data-pw>
                     <label for="new-password-confirmation">Confirm password</label>
                     <input id="new-password-confirmation" type="password" name="password_confirmation" required minlength="10" autocomplete="new-password" data-pw>
-                    <label class="show"><input type="checkbox" data-show-password> Show password</label>
+                    <div class="pw-tools"><label class="show"><input type="checkbox" data-show-password> Show password</label><button type="button" class="link-btn" data-generate-password>Generate password</button></div>
 
                     <button type="submit" class="btn solid">Add mailbox</button>
                 </form>
@@ -86,7 +86,7 @@
                         <input id="pw-{{ $loop->index }}" type="password" name="password" required minlength="10" autocomplete="new-password" data-pw>
                         <label for="pwc-{{ $loop->index }}">Confirm password</label>
                         <input id="pwc-{{ $loop->index }}" type="password" name="password_confirmation" required minlength="10" autocomplete="new-password" data-pw>
-                        <label class="show"><input type="checkbox" data-show-password> Show password</label>
+                        <div class="pw-tools"><label class="show"><input type="checkbox" data-show-password> Show password</label><button type="button" class="link-btn" data-generate-password>Generate password</button></div>
                         <button type="submit" class="btn solid">Reset password</button>
                     </form>
                 </div></td></tr>

@@ -476,8 +476,48 @@ test('a failed delete goes back with the friendly message and no deleted key', f
     });
 });
 
-test('the weak password message names real words and sequences like 1234', function () {
-    expect(MailboxController::WEAK_PASSWORD)
-        ->toContain('no real words')
-        ->toContain('1234');
+test('the weak password message points at the Generate password button', function () {
+    expect(MailboxController::WEAK_PASSWORD)->toContain('Generate password');
+});
+
+test('the add form and every reset form carry a Generate password button beside Show password', function () {
+    fakeCpanel([row('sales@'.DOMAIN), row('info@'.DOMAIN)]);
+
+    $html = $this->actingAs(client())->get('/mailbox')->assertOk()->getContent();
+
+    // Two mailboxes: the add form plus one reset form each. The script's own selector also carries the attribute.
+    expect(substr_count($html, '<button type="button" class="link-btn" data-generate-password>Generate password</button>'))->toBe(3)
+        ->and(substr_count($html, '<div class="pw-tools"><label class="show"><input type="checkbox" data-show-password> Show password</label><button type="button" class="link-btn" data-generate-password>Generate password</button></div>'))->toBe(3);
+
+    preg_match('#<section class="panel[^"]*" id="add".*?</section>#s', $html, $add);
+    expect($add[0] ?? '')->toContain('data-generate-password')
+        ->and($add[0])->toContain('data-show-password')
+        ->and($add[0])->toContain('data-pw');
+
+    preg_match('#<tr class="panel-row" id="reset-0">.*?</tr>#s', $html, $reset);
+    expect($reset[0] ?? '')->toContain('data-generate-password')
+        ->and($reset[0])->toContain('data-show-password');
+});
+
+test('the layout script generates the password in the browser with crypto.getRandomValues', function () {
+    fakeCpanel([row('sales@'.DOMAIN)]);
+
+    $html = $this->actingAs(client())->get('/mailbox')->assertOk()->getContent();
+
+    expect($html)->toContain('crypto.getRandomValues')
+        ->and($html)->toContain("var pwAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!#$%*+-=?@';")
+        ->and($html)->toContain("querySelectorAll('[data-generate-password]')");
+});
+
+test('the weak-password flash shows the new short sentence', function () {
+    fakeCpanel([], ['status' => 0, 'errors' => [WEAK_PASSWORD_REPLY], 'data' => null]);
+
+    $this->actingAs(client())->from('/mailbox')->post('/mailbox/add', [
+        'username' => 'sales', 'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
+    ])->assertRedirect('/mailbox');
+
+    $this->get('/mailbox')
+        ->assertOk()
+        ->assertSee('This password is too easy to guess. Click Generate password for a strong one.', false)
+        ->assertDontSee('no real words');
 });

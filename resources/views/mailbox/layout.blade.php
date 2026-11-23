@@ -119,6 +119,10 @@
         .suffix:has(input[aria-invalid=true]) span { border-color: var(--err); }
         .show { display: flex; align-items: center; gap: 10px; min-height: var(--tap); margin: 6px 0 0; font-weight: 400; color: var(--ink-2); }
         .show input { width: 18px; height: 18px; margin: 0; accent-color: var(--violet); }
+        /* Generate password: a plain link-style button on the Show password line, right side. */
+        .pw-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+        .link-btn { background: none; border: 0; padding: 0; min-height: var(--tap); font: inherit; font-weight: 600; color: var(--violet); cursor: pointer; }
+        .link-btn:hover { text-decoration: underline; }
         .err { color: var(--err); font-size: .8125rem; font-weight: 500; margin: 6px 0 0; }
         :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
 
@@ -304,6 +308,31 @@ document.querySelectorAll('[data-show-password]').forEach(function (box) {
 var panel = document.querySelector('[data-open]');
 if (panel) panel.addEventListener('click', function () {
     document.querySelector(panel.dataset.open).classList.toggle('open');
+});
+// Generate password: a strong 16-character password, made in the browser only. Never sent, logged or stored.
+var pwAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!#$%*+-=?@';
+function makePassword() {
+    var pw;
+    var ok = false;
+    while (!ok) {
+        pw = '';
+        var bytes = new Uint8Array(16);
+        crypto.getRandomValues(bytes);
+        for (var i = 0; i < 16; i++) pw += pwAlphabet.charAt(bytes[i] % pwAlphabet.length);
+        ok = /[A-Z]/.test(pw) && /[a-z]/.test(pw) && /[0-9]/.test(pw) && /[^A-Za-z0-9]/.test(pw);
+    }
+    return pw;
+}
+document.querySelectorAll('[data-generate-password]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        var form = btn.closest('form');
+        var pw = makePassword();
+        var box = form.querySelector('[data-show-password]');
+        form.querySelectorAll('input[data-pw]').forEach(function (i) { i.value = pw; i.type = 'text'; });
+        if (box) box.checked = true;
+        var first = form.querySelector('input[data-pw]');
+        if (first) first.focus();
+    });
 });
 var q = document.querySelector('[data-search]');
 if (q) q.addEventListener('input', function () {
