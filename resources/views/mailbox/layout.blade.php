@@ -265,10 +265,40 @@
           body.auth.has-bg { background-image: var(--auth-bg); }
         }
         @endif
+
+        /* Invite (MP-05 A): the POST form, the address-cell button, the phone links item and the one-time invite-link panel.
+           Existing tokens only; phones use the 44 px links row, the 32 px desktop button is 720 px and up. */
+        form.invite { display: inline; margin: 0; }
+        form.invite button { margin: 0; font: inherit; cursor: pointer; }
+        .addr-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+        .addr-line strong { min-width: 0; }
+        .addr-line form.invite { display: none; }
+        .btn.sm { min-height: 32px; padding: 4px 12px; font-size: .8125rem; gap: 6px; }
+        .btn.secondary { background: #fff; color: var(--ink); border-color: var(--field); box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+        .btn.secondary:hover { background: var(--sunk); border-color: #9CA3AF; }
+        td.act .links { flex-wrap: wrap; column-gap: 20px; row-gap: 0; }
+        td.act .links form.invite button { display: inline-flex; align-items: center; min-height: var(--tap); padding: 0; background: none; border: 0; font-weight: 600; color: var(--violet-fg); }
+        .panel.invite-panel h2 { overflow-wrap: anywhere; }
+        .copy { display: flex; flex-direction: column; gap: 8px; max-width: 640px; margin-top: 14px; }
+        .copy input[readonly] { background: #fff; color: var(--ink); text-overflow: ellipsis; }
+        .copy input[readonly]:hover { border-color: var(--field); }
+        .panel .copy .btn { margin-top: 0; }
+        .panel .hint { margin: 10px 0 0; color: var(--ink-2); }
+
+        @media (min-width: 720px) {
+          .addr-line form.invite { display: inline; }
+          .copy { flex-direction: row; align-items: stretch; }
+          .copy input[readonly] { flex: 1 1 auto; min-width: 0; }
+          .copy .btn { flex: none; }
+          .menu .pop form.invite { display: block; }
+          .menu .pop form.invite button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: var(--tap); padding: 0 12px; background: none; border: 0; border-radius: 6px; font-weight: 500; color: var(--ink); white-space: nowrap; text-align: left; }
+          .menu .pop form.invite button svg.i { color: var(--ink-2); }
+          .menu .pop form.invite button:hover { background: var(--neutral-bg); }
+        }
     </style>
 </head>
 <body class="@yield('body', 'app'){{ $bgFile ? ' has-bg' : '' }}"@if ($bgStyle) style="{{ $bgStyle }}"@endif>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol><symbol id="i-disk" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></symbol><symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></symbol><symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/><path d="M10 11v5M14 11v5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol><symbol id="i-disk" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></symbol><symbol id="i-invite" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5 1.6 0 3 .4 4.2 1.1"/><path d="M19 14v6M16 17h6"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol><symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></symbol><symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/><path d="M10 11v5M14 11v5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></symbol></svg>
 @hasSection('auth')
 <main>
 <div class="card">
@@ -333,6 +363,14 @@ document.querySelectorAll('[data-generate-password]').forEach(function (btn) {
         if (box) box.checked = true;
         var first = form.querySelector('input[data-pw]');
         if (first) first.focus();
+    });
+});
+// Copy link: select the field first, so a refused or missing clipboard API still leaves it ready for Ctrl/Cmd+C.
+document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        var field = document.querySelector(btn.dataset.copy);
+        field.select();
+        if (navigator.clipboard) navigator.clipboard.writeText(field.value).catch(function () {});
     });
 });
 var q = document.querySelector('[data-search]');

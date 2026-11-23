@@ -68,14 +68,14 @@
                     $suspended = ! empty($box['suspended_login']);
                 @endphp
                 <tr class="row" data-address="{{ $address }}">
-                    <td class="addr"><strong>{{ $address }}</strong><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit" class="web">Open webmail</button></form></td>
+                    <td class="addr"><div class="addr-line"><strong>{{ $address }}</strong><form class="invite" method="POST" action="{{ route('mailbox.invite', ['address' => $address]) }}">@csrf<button type="submit" class="btn sm secondary"><svg class="i" aria-hidden="true"><use href="#i-invite"/></svg>Invite</button></form></div><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit" class="web">Open webmail</button></form></td>
                     <td class="used" data-label="Disk used">{{ $box['used_display'] }}</td>
                     <td class="q" data-label="Quota">@if ($box['quota_display'] === 'Unlimited')<span class="pill ok"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Unlimited</span>@else<span class="pill neutral">{{ $box['quota_display'] }}</span>@endif</td>
                     <td class="st" data-label="Status">@if ($suspended)<span class="pill warn">Suspended</span>@else<span class="pill ok"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Active</span>@endif</td>
                     <td class="act">
                         <details class="menu"><summary aria-label="Action: {{ $address }}"><svg class="i" aria-hidden="true"><use href="#i-dots"/></svg></summary>
-                            <div class="pop"><a href="#reset-{{ $loop->index }}"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit"><svg class="i" aria-hidden="true"><use href="#i-out"/></svg>Open webmail</button></form><a class="danger" href="#delete-{{ $loop->index }}"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></details>
-                        <div class="links"><a href="#reset-{{ $loop->index }}">Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit">Open webmail</button></form><a class="danger" href="#delete-{{ $loop->index }}">Delete</a></div>
+                            <div class="pop"><form class="invite" method="POST" action="{{ route('mailbox.invite', ['address' => $address]) }}">@csrf<button type="submit"><svg class="i" aria-hidden="true"><use href="#i-invite"/></svg>Invite</button></form><a href="#reset-{{ $loop->index }}"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit"><svg class="i" aria-hidden="true"><use href="#i-out"/></svg>Open webmail</button></form><a class="danger" href="#delete-{{ $loop->index }}"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Delete</a></div></details>
+                        <div class="links"><form class="invite" method="POST" action="{{ route('mailbox.invite', ['address' => $address]) }}">@csrf<button type="submit">Invite</button></form><a href="#reset-{{ $loop->index }}">Reset password</a><form class="webmail" method="POST" action="{{ $webmail }}" target="_blank" rel="noopener">@csrf<button type="submit">Open webmail</button></form><a class="danger" href="#delete-{{ $loop->index }}">Delete</a></div>
                     </td>
                 </tr>
                 <tr class="panel-row" id="reset-{{ $loop->index }}"><td colspan="5"><div class="panel">
@@ -90,6 +90,17 @@
                         <button type="submit" class="btn solid">Reset password</button>
                     </form>
                 </div></td></tr>
+                @if (session('invite_for') === $address && session('invite_link'))
+                    <tr class="panel-row open" id="invite-panel"><td colspan="5"><div class="panel invite-panel">
+                        <h2>Invite link for {{ $address }}</h2>
+                        <p class="sub">This link lets the person set their own password.</p>
+                        <div class="copy">
+                            <input id="invite-link" type="text" value="{{ session('invite_link') }}" readonly aria-label="Invite link">
+                            <button type="button" class="btn sm secondary" data-copy="#invite-link"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>Copy link</button>
+                        </div>
+                        <p class="hint">Send this to the person. It works once and expires in 72 hours.</p>
+                    </div></td></tr>
+                @endif
                 <tr class="panel-row" id="delete-{{ $loop->index }}"><td colspan="5"><div class="panel">
                     <h2>Delete mailbox</h2><p class="sub">{{ $address }}</p>
                     <p>This permanently deletes the mailbox and all its mail. This cannot be undone.</p>

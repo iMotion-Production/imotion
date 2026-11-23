@@ -237,6 +237,96 @@ test('a mismatched confirmation is a validation error and calls nothing', functi
     expect($fake->calls)->toBe([]);
 });
 
+test('the index page offers Invite for each mailbox: address line, three-dot menu and links row', function () {
+    invFake([invRow('sales'), invRow('support')]);
+
+    $res = $this->actingAs(invAdmin())->get('/mailbox');
+    $res->assertOk();
+
+    foreach (['sales', 'support'] as $local) {
+        $address = $local.'@'.INV_DOMAIN;
+        $action = route('mailbox.invite', ['address' => $address]);
+
+        // One in the address cell, one in the menu, one in the phone links row.
+        expect(substr_count($res->getContent(), '<form class="invite" method="POST" action="'.e($action).'">'))->toBe(3);
+    }
+
+    // Menu order: Invite, Reset password, Open webmail, Delete.
+    $pop = substr($res->getContent(), strpos($res->getContent(), '<div class="pop">'));
+    $pop = substr($pop, 0, strpos($pop, '</details>'));
+    $order = ['>Invite<', '>Reset password<', '>Open webmail<', '>Delete<'];
+    $at = -1;
+    foreach ($order as $label) {
+        $pos = strpos($pop, $label);
+        expect($pos)->not->toBeFalse()->toBeGreaterThan($at);
+        $at = $pos;
+    }
+
+    // The same order in the phone links row.
+    $links = substr($res->getContent(), strpos($res->getContent(), '<div class="links">'));
+    $links = substr($links, 0, strpos($links, '</div>'));
+    $at = -1;
+    foreach (['>Invite<', '>Reset password<', '>Open webmail<', '>Delete<'] as $label) {
+        $pos = strpos($links, $label);
+        expect($pos)->not->toBeFalse()->toBeGreaterThan($at);
+        $at = $pos;
+    }
+});
+
+test('after an invite the index shows that mailbox invite link once, with a copy button and the hint', function () {
+    invFake([invRow('sales'), invRow('support')]);
+    $admin = invAdmin();
+
+    $this->actingAs($admin)->from('/mailbox')->post('/mailbox/sales@'.INV_DOMAIN.'/invite')->assertRedirect('/mailbox');
+    $link = session('invite_link');
+    expect($link)->toBeString();
+
+    $res = $this->actingAs($admin)->get('/mailbox')->assertOk();
+
+    $res->assertSee('Invite link for sales@'.INV_DOMAIN, false)
+        ->assertSee('value="'.e($link).'" readonly', false)
+        ->assertSee('data-copy="#invite-link"', false)
+        ->assertSee('Copy link')
+        ->assertSee('Send this to the person. It works once and expires in 72 hours.');
+
+    // Only that mailbox's row: one panel and one link value on the page.
+    $res->assertSee('class="panel invite-panel"', false)
+        ->assertSee('value="'.e($link).'" readonly', false)
+        ->assertSee('data-copy="#invite-link"', false)
+        ->assertSee('>Copy link<', false);
+    expect(substr_count($res->getContent(), 'value="'.e($link).'" readonly'))->toBe(1)
+        ->and($res->getContent())->not->toContain('Invite link for support@'.INV_DOMAIN);
+});
+
+test('the invite-link panel is gone on the next page load and the link is not in the HTML', function () {
+    invFake([invRow('sales')]);
+    $admin = invAdmin();
+
+    $this->actingAs($admin)->from('/mailbox')->post('/mailbox/sales@'.INV_DOMAIN.'/invite');
+    $link = session('invite_link');
+
+    $this->actingAs($admin)->get('/mailbox')->assertSee('Invite link for sales@'.INV_DOMAIN, false);
+
+    $res = $this->actingAs($admin)->get('/mailbox')->assertOk();
+
+    $res->assertDontSee('Invite link for sales@'.INV_DOMAIN, false)
+        ->assertDontSee('data-copy="#invite-link"', false)
+        ->assertDontSee('Send this to the person.', false)
+        ->assertDontSee(substr($link, -48), false);
+});
+
+test('the client-host index has no iMotion wording', function () {
+    invFake([invRow('sales')]);
+    User::factory()->create(['email' => 'owner@'.INV_DOMAIN, 'mail_domain' => INV_DOMAIN, 'portal_host' => INV_HOST]);
+
+    $res = $this->actingAs(User::where('mail_domain', INV_DOMAIN)->first())
+        ->get('https://'.INV_HOST.'/mailbox')
+        ->assertOk();
+
+    $res->assertDontSee('iMotion');
+    expect(stripos($res->getContent(), 'imotion'))->toBeFalse();
+});
+
 test('the token never reaches the log', function () {
     invFake([], ['status' => 0, 'errors' => ['Internal secret detail'], 'data' => null]);
     Log::spy();
