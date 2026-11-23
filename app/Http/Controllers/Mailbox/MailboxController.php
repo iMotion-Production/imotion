@@ -100,6 +100,24 @@ class MailboxController extends Controller
         return redirect()->route('mailbox.index')->with('success', $address);
     }
 
+    /** Deletes one mailbox of the user's own domain. */
+    public function destroy(Request $request, string $address): RedirectResponse
+    {
+        $domain = $request->user()->mail_domain;
+        $address = strtolower($address);
+        $user = $this->ownUser($domain, $address);
+
+        try {
+            $this->cpanel->delete($domain, $user);
+        } catch (CpanelMailException $e) {
+            $this->logFailure('delete_pop', $address, $e);
+
+            return back()->with('error', self::unavailable());
+        }
+
+        return redirect()->route('mailbox.index')->with('deleted', $address);
+    }
+
     /**
      * One-click webmail: a fresh cPanel session for the mailbox, handed to the browser
      * as a self-submitting POST form. The session value is never logged or stored.

@@ -38,5 +38,6 @@ Route::prefix('mailbox')->name('mailbox.')->group(function () {
         Route::post('/add', [MailboxController::class, 'add'])->middleware('throttle:20,1')->name('add');
         Route::post('/{address}/password', [MailboxController::class, 'password'])->middleware('throttle:20,1')->name('password');
         Route::post('/{address}/webmail', [MailboxController::class, 'webmail'])->middleware('throttle:20,1')->name('webmail');
+        Route::post('/{address}/delete', [MailboxController::class, 'destroy'])->middleware('throttle:20,1')->name('delete');
     });
 });

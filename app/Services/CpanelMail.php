@@ -6,7 +6,7 @@ use App\Services\Cpanel\CpanelTransport;
 use InvalidArgumentException;
 
 /**
- * The three cPanel UAPI calls the mailbox portal is allowed to make.
+ * The cPanel UAPI calls the mailbox portal is allowed to make.
  * The domain argument must always come from the logged-in user's mail_domain.
  * How cPanel is reached (local `uapi` command or HTTPS) is the bound CpanelTransport.
  */
@@ -57,6 +57,13 @@ class CpanelMail
             'domain' => $domain,
             'password' => $password,
         ], true);
+    }
+
+    public function delete(string $domain, string $user): void
+    {
+        $this->assertUser($user);
+
+        $this->transport->call('Email', 'delete_pop', ['email' => $user, 'domain' => $domain, 'flush' => 1], true);
     }
 
     /**
