@@ -176,6 +176,7 @@
         .card svg.logo { height: 28px; width: auto; color: var(--ink); display: block; margin-bottom: 28px; }
         .card .btn { width: 100%; margin-top: 16px; }
         .card .muted { color: var(--ink-2); margin: 20px 0 0; text-align: center; }
+        .card .sub { margin: -12px 0 20px; color: var(--ink-2); overflow-wrap: anywhere; }
 
         @media (max-width: 719px) { .toolbar .btn.primary, .toolbar .note { width: 100%; } }
         /* Fix round 1 (W001): one stat card per row below 560 px, so a 4-digit total ("1,234.5 MB") fits its card. */
