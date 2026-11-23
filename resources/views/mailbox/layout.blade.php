@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
+    @if ($__env->hasSection('no_referrer'))<meta name="referrer" content="no-referrer">@endif
     @php
         // Branding: a client host or a non-imotion.my user sees the client's name and logo, never iMotion's (PM, 2026-11-20).
         $isClient = \App\Support\Portal::isClient();

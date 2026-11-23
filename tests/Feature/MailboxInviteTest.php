@@ -394,3 +394,58 @@ test('the token never reaches the log', function () {
     Log::shouldNotHaveReceived('info', fn ($msg, $ctx) => str_contains(json_encode([$msg, $ctx ?? []]), $token));
     Log::shouldNotHaveReceived('debug', fn ($msg, $ctx) => str_contains(json_encode([$msg, $ctx ?? []]), $token));
 });
+
+/** The meta tag is in $html and it comes before the Google Fonts links, so the token URL never travels as a Referer. */
+function invAssertNoReferrerMeta(string $html): void
+{
+    expect(substr_count($html, '<meta name="referrer" content="no-referrer">'))->toBe(1);
+
+    $meta = strpos($html, '<meta name="referrer" content="no-referrer">');
+    $fonts = strpos($html, 'fonts.googleapis.com');
+
+    expect($fonts)->not->toBeFalse()
+        ->and($meta)->toBeLessThan($fonts)
+        ->and($meta)->toBeLessThan(strpos($html, 'fonts.gstatic.com'));
+}
+
+test('the join page carries the no-referrer meta tag before the font links', function () {
+    [, $token] = invMake(invAdmin());
+
+    $res = $this->get('https://'.INV_HOST.'/mailbox/join/'.$token)->assertOk();
+
+    invAssertNoReferrerMeta($res->getContent());
+});
+
+test('the done page carries the no-referrer meta tag before the font links', function () {
+    invFake([]);
+    [, $token] = invMake(invAdmin());
+
+    // The done page is reached by setting the password; its URL is the invite URL, so it must not leak either.
+    $res = $this->post('https://'.INV_HOST.'/mailbox/join/'.$token, [
+        'password' => 'Stronger-pass-42', 'password_confirmation' => 'Stronger-pass-42',
+    ])->assertOk();
+
+    invAssertNoReferrerMeta($res->getContent());
+});
+
+test('the expired page carries the no-referrer meta tag before the font links', function () {
+    invAdmin();
+
+    $res = $this->get('https://'.INV_HOST.'/mailbox/join/'.Str::random(48))->assertStatus(410);
+
+    invAssertNoReferrerMeta($res->getContent());
+});
+
+test('the login page and the index page carry no no-referrer meta tag', function () {
+    invFake([invRow('sales')]);
+    $admin = invAdmin();
+
+    $login = $this->get('https://'.INV_HOST.'/mailbox/login')->assertOk();
+    $index = $this->actingAs($admin)->get('https://'.INV_HOST.'/mailbox')->assertOk();
+
+    foreach ([$login, $index] as $res) {
+        $html = $res->getContent();
+        expect(str_contains($html, 'name="referrer"'))->toBeFalse()
+            ->and(str_contains($html, 'fonts.googleapis.com'))->toBeTrue();
+    }
+});

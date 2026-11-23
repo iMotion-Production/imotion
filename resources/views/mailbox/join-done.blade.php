@@ -3,6 +3,7 @@
 @section('page_title', 'Your password is set')
 @section('body', 'auth')
 @section('auth', '1')
+@section('no_referrer', '1')
 
 @section('content')
     <h1>Your password is set</h1>
