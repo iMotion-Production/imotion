@@ -11,6 +11,9 @@ uses(RefreshDatabase::class);
 
 const DOMAIN = 'fokusteguhdinamik.com.my';
 
+/** The exact sentence cPanel's Email/add_pop returned when the Project Manager's password was refused. */
+const WEAK_PASSWORD_REPLY = 'The password that you entered has a strength rating of "1". You cannot use it because it is too weak and too easy to guess. Please enter a password with a strength rating of "65" or higher.';
+
 beforeEach(function () {
     config(['services.cpanel.max_mailboxes' => 20, 'app.url' => 'https://imotion.my']);
 });
@@ -367,6 +370,79 @@ test('delete on another domain address is 404 and calls nothing', function () {
     $this->actingAs(client())->post('/mailbox/boss@other-client.com/delete')->assertNotFound();
 
     expect($fake->sent('delete_pop'))->toBe([]);
+});
+
+test('a weak password on add is the user input: told plainly and not logged', function () {
+    fakeCpanel([], ['status' => 0, 'errors' => [WEAK_PASSWORD_REPLY], 'data' => null]);
+    Log::spy();
+
+    $this->actingAs(client())->from('/mailbox')->post('/mailbox/add', [
+        'username' => 'sales', 'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
+    ])->assertRedirect('/mailbox')
+        ->assertSessionHasErrors(['password' => MailboxController::WEAK_PASSWORD])
+        ->assertSessionHasInput('username', 'sales')
+        ->assertSessionMissing('error');
+
+    Log::shouldNotHaveReceived('warning');
+
+    $this->get('/mailbox')
+        ->assertOk()
+        ->assertSee(MailboxController::WEAK_PASSWORD, false)
+        ->assertDontSee('Mailbox service is unavailable');
+});
+
+test('a weak password on reset says so and is not logged as a service failure', function () {
+    fakeCpanel([row('sales@'.DOMAIN)], ['status' => 0, 'errors' => [WEAK_PASSWORD_REPLY], 'data' => null]);
+    Log::spy();
+
+    $this->actingAs(client())->from('/mailbox')->post('/mailbox/sales@'.DOMAIN.'/password', [
+        'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
+    ])->assertRedirect('/mailbox')
+        ->assertSessionHasErrors(['password' => MailboxController::WEAK_PASSWORD])
+        ->assertSessionMissing('error');
+
+    Log::shouldNotHaveReceived('warning');
+
+    $this->get('/mailbox')
+        ->assertOk()
+        ->assertSee(MailboxController::WEAK_PASSWORD, false)
+        ->assertDontSee('Mailbox service is unavailable');
+});
+
+test('a weak password on add leaves the add panel open with the username kept', function () {
+    fakeCpanel([], ['status' => 0, 'errors' => [WEAK_PASSWORD_REPLY], 'data' => null]);
+
+    $this->actingAs(client())->from('/mailbox')->post('/mailbox/add', [
+        'username' => 'sales', 'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
+    ])->assertRedirect('/mailbox');
+
+    $this->get('/mailbox')
+        ->assertOk()
+        ->assertSee('class="panel open" id="add"', false)
+        ->assertSee('value="sales"', false);
+});
+
+test('a weak password on reset does not open the add panel', function () {
+    fakeCpanel([row('sales@'.DOMAIN)], ['status' => 0, 'errors' => [WEAK_PASSWORD_REPLY], 'data' => null]);
+
+    $this->actingAs(client())->from('/mailbox')->post('/mailbox/sales@'.DOMAIN.'/password', [
+        'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
+    ])->assertRedirect('/mailbox');
+
+    $this->get('/mailbox')
+        ->assertOk()
+        ->assertDontSee('class="panel open" id="add"', false);
+});
+
+test('a different cPanel failure still shows the unavailable message', function () {
+    fakeCpanel([], ['status' => 0, 'errors' => ['Internal secret detail'], 'data' => null]);
+    Log::spy();
+
+    $this->actingAs(client())->from('/mailbox')->post('/mailbox/add', [
+        'username' => 'sales', 'password' => 'secretpass99', 'password_confirmation' => 'secretpass99',
+    ])->assertRedirect('/mailbox')->assertSessionHas('error', MailboxController::unavailable());
+
+    Log::shouldHaveReceived('warning')->once();
 });
 
 test('delete of an invalid local part is 404 and calls nothing', function () {
