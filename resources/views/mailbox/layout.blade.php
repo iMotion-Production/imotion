@@ -23,7 +23,11 @@
         $bgStyle = $bgFile ? "--auth-bg:url('/".$bgFile."'); --auth-bg-sm:url('/".$bgSmallFile."'); --auth-bg-portrait:url('/".$bgPortraitFile."');" : null;
     @endphp
     @if ($isClient)
+    @if ($__env->hasSection('page_title'))
+    <title>@yield('page_title')</title>
+    @else
     <title>{{ $clientName ? $clientName.' · Mailboxes' : 'Mailboxes' }}</title>
+    @endif
     @php
         // Always name an icon on a client host: with no link the browser asks for /favicon.ico, which is iMotion's.
         $iconFile = $logoDomain && preg_match('/^[a-z0-9.-]+$/', $logoDomain) ? 'portal/favicons/'.$logoDomain.'.png' : null;

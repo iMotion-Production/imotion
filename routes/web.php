@@ -10,6 +10,7 @@ use App\Http\Controllers\Public\PrintingDesignController;
 use App\Http\Controllers\Public\WebsiteDevelopmentController;
 use App\Http\Controllers\Mailbox\AuthController as MailboxAuthController;
 use App\Http\Controllers\Mailbox\MailboxController;
+use App\Http\Controllers\Mailbox\WebmailSigninController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -32,6 +33,9 @@ Route::prefix('mailbox')->name('mailbox.')->group(function () {
     });
 
     Route::post('/logout', [MailboxAuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+    // MP-04: branded webmail sign-in. Public (outside guest/auth); 404 on the iMotion host. The POST /{address}/webmail route stays.
+    Route::get('/webmail', [WebmailSigninController::class, 'show'])->name('webmail.signin');
 
     Route::middleware(['auth', 'mail.client'])->group(function () {
         Route::get('/', [MailboxController::class, 'index'])->name('index');
