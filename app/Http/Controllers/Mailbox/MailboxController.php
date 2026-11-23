@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mailbox;
 
 use App\Http\Controllers\Controller;
+use App\Models\MailboxInvite;
 use App\Services\CpanelMail;
 use App\Services\CpanelMailException;
 use App\Support\Portal;
@@ -10,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class MailboxController extends Controller
@@ -20,7 +22,10 @@ class MailboxController extends Controller
 
     public const RESERVED = ['cpanel', 'postmaster', 'abuse', 'webmaster', 'root', 'admin'];
 
-    public const WEAK_PASSWORD = 'This password is too weak. Use at least 12 characters with upper and lower case letters, a number and a symbol.';
+    public const WEAK_PASSWORD = 'This password is too easy to guess. Click Generate password for a strong one.';
+
+    /** The bookmark sentence shown after an invite link is used. */
+    public const BOOKMARK = 'Bookmark this for every day:';
 
     public function __construct(private CpanelMail $cpanel) {}
 
@@ -127,6 +132,58 @@ class MailboxController extends Controller
     }
 
     /**
+     * One-time set-password link for a mailbox (72 hours). The token is generated here, only its
+     * SHA-256 is stored, and the plain link goes to the admin once, in the redirect flash.
+     */
+    public function invite(Request $request, string $address): RedirectResponse
+    {
+        $user = $request->user();
+        $domain = $user->mail_domain;
+        $address = strtolower($address);
+        $local = $this->ownUser($domain, $address);
+
+        try {
+            $exists = collect($this->cpanel->list($domain))
+                ->contains(fn ($box) => strtolower((string) ($box['email'] ?? '')) === $address);
+        } catch (CpanelMailException $e) {
+            $this->logFailure('list_pops_with_disk', $address, $e);
+
+            return back()->with('error', self::unavailable());
+        }
+
+        if (! $exists) {
+            return back()->with('error', 'This mailbox no longer exists.');
+        }
+
+        // One live link per mailbox: the admin's earlier unused invites for it stop working.
+        MailboxInvite::query()
+            ->where('user_id', $user->id)
+            ->where('mailbox_user', $local)
+            ->where('mail_domain', $domain)
+            ->whereNull('used_at')
+            ->delete();
+
+        $token = Str::random(48);
+
+        MailboxInvite::create([
+            'user_id' => $user->id,
+            'mail_domain' => $domain,
+            'mailbox_user' => $local,
+            'token_hash' => hash('sha256', $token),
+            'expires_at' => now()->addHours(MailboxInvite::TTL_HOURS),
+        ]);
+
+        $host = trim((string) $user->portal_host);
+        if ($host === '') {
+            $host = $request->getHost();
+        }
+
+        return redirect()->route('mailbox.index')
+            ->with('invite_link', 'https://'.$host.'/mailbox/join/'.$token)
+            ->with('invite_for', $address);
+    }
+
+    /**
      * One-click webmail: a fresh cPanel session for the mailbox, handed to the browser
      * as a self-submitting POST form. The session value is never logged or stored.
      */
@@ -201,7 +258,8 @@ class MailboxController extends Controller
         return $user;
     }
 
-    private function logFailure(string $function, string $address, CpanelMailException $e, string $module = 'Email'): void
+    /** The cPanel failure line, shared with the public invite pages (never carries a token). */
+    public static function logCpanelFailure(string $function, string $address, CpanelMailException $e, string $module = 'Email'): void
     {
         Log::warning('cPanel mailbox call failed', [
             'function' => $module.'/'.$function,
@@ -209,5 +267,10 @@ class MailboxController extends Controller
             'error' => $e->getMessage(),
             'detail' => $e->detail,
         ]);
+    }
+
+    private function logFailure(string $function, string $address, CpanelMailException $e, string $module = 'Email'): void
+    {
+        self::logCpanelFailure($function, $address, $e, $module);
     }
 }

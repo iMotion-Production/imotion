@@ -9,6 +9,7 @@ use App\Http\Controllers\Public\MobileApplicationController;
 use App\Http\Controllers\Public\PrintingDesignController;
 use App\Http\Controllers\Public\WebsiteDevelopmentController;
 use App\Http\Controllers\Mailbox\AuthController as MailboxAuthController;
+use App\Http\Controllers\Mailbox\InviteController;
 use App\Http\Controllers\Mailbox\MailboxController;
 use App\Http\Controllers\Mailbox\WebmailSigninController;
 use Illuminate\Support\Facades\Route;
@@ -37,9 +38,14 @@ Route::prefix('mailbox')->name('mailbox.')->group(function () {
     // MP-04: branded webmail sign-in. Public (outside guest/auth); 404 on the iMotion host. The POST /{address}/webmail route stays.
     Route::get('/webmail', [WebmailSigninController::class, 'show'])->name('webmail.signin');
 
+    // Invite link: one-time set-password pages, public like webmail.signin. The token is the credential.
+    Route::get('/join/{token}', [InviteController::class, 'show'])->name('join.show');
+    Route::post('/join/{token}', [InviteController::class, 'store'])->middleware('throttle:5,1')->name('join.store');
+
     Route::middleware(['auth', 'mail.client'])->group(function () {
         Route::get('/', [MailboxController::class, 'index'])->name('index');
         Route::post('/add', [MailboxController::class, 'add'])->middleware('throttle:20,1')->name('add');
+        Route::post('/{address}/invite', [MailboxController::class, 'invite'])->middleware('throttle:20,1')->name('invite');
         Route::post('/{address}/password', [MailboxController::class, 'password'])->middleware('throttle:20,1')->name('password');
         Route::post('/{address}/webmail', [MailboxController::class, 'webmail'])->middleware('throttle:20,1')->name('webmail');
         Route::post('/{address}/delete', [MailboxController::class, 'destroy'])->middleware('throttle:20,1')->name('delete');
